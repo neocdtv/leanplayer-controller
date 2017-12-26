@@ -1,6 +1,6 @@
-package io.neocdtv.simpleplayer.player;
+package io.neocdtv.leanplayer.controller.player;
 
-import io.neocdtv.simpleplayer.ui.PlaylistUI;
+import io.neocdtv.leanplayer.controller.ui.PlaylistUI;
 import org.glassfish.tyrus.client.ClientManager;
 
 import javax.websocket.ClientEndpointConfig;
@@ -20,17 +20,20 @@ import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 /**
- * Created by xix on 03.10.17.
+ * ZenPlayer.
+ *
+ * @author xix
+ * @since 22.12.17
  */
-public class ZenPlayer implements Player {
+public class LeanPlayer implements Player {
 
-  private final static Logger LOGGER = Logger.getLogger(ZenPlayer.class.getName());
+  private final static Logger LOGGER = Logger.getLogger(LeanPlayer.class.getName());
 
   private final String baseUrl;
   private final String restBaseUrl = "/rs/control";
   private final String webSocketUrl = "/events";
 
-  public ZenPlayer(String baseUrl) {
+  public LeanPlayer(String baseUrl) {
     this.baseUrl = baseUrl;
     openWebSocketConnection();
   }

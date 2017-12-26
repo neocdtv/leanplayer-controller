@@ -3,19 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.worker;
+package io.neocdtv.leanplayer.controller.worker;
 
-import io.neocdtv.simpleplayer.player.Player;
-import io.neocdtv.simpleplayer.player.PlayerException;
-import io.neocdtv.simpleplayer.player.PlayerFactory;
-import io.neocdtv.simpleplayer.ui.PlaylistUI;
+import io.neocdtv.leanplayer.controller.player.Player;
+import io.neocdtv.leanplayer.controller.player.PlayerException;
+import io.neocdtv.leanplayer.controller.player.PlayerFactory;
 
 import javax.swing.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * PauseWorker.
+ *
  * @author xix
+ * @since 22.12.17
  */
 public class PauseWorker extends SwingWorker<Void, Void> {
 

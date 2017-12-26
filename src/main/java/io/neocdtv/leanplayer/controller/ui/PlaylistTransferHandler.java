@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.ui;
+package io.neocdtv.leanplayer.controller.ui;
 
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
@@ -40,8 +40,6 @@ package io.neocdtv.simpleplayer.ui;
  * ListTransferHandler.java is used by the DropDemo example.
  */
 
-import io.neocdtv.simpleplayer.init.LookAndFeel;
-
 import javax.swing.*;
 import java.awt.datatransfer.*;
 import java.io.File;
@@ -55,7 +53,7 @@ import org.apache.commons.io.FileUtils;
 
 public class PlaylistTransferHandler extends TransferHandler {
 
-  private final static Logger LOGGER = Logger.getLogger(LookAndFeel.class.getName());
+  private final static Logger LOGGER = Logger.getLogger(io.neocdtv.leanplayer.controller.init.LookAndFeel.class.getName());
 
   private int[] indices = null;
   private int addIndex = -1; //Location where items were added

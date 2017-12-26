@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.ui;
+package io.neocdtv.leanplayer.controller.ui;
 
 import javax.swing.*;
 
 /**
+ * MPlayerResource.
+ *
  * @author xix
+ * @since 22.12.17
  */
 public class PlayerStateFieldFactory {
 

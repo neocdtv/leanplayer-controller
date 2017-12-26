@@ -1,7 +1,13 @@
-package io.neocdtv.simpleplayer.init;
+package io.neocdtv.leanplayer.controller.init;
 
 import javax.inject.Inject;
 
+/**
+ * DeviceDiscovery.
+ *
+ * @author xix
+ * @since 22.12.17
+ */
 public class DeviceDiscovery {
 
   @Inject

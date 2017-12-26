@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.init;
+package io.neocdtv.leanplayer.controller.init;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,11 +13,14 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 /**
+ * LookAndFeel.
+ *
  * @author xix
+ * @since 22.12.17
  */
 public class LookAndFeel {
 
-  // TODO: check look and feel on windows
+  // TODO: check look and feel on windows and mac
 
   private final static Logger LOGGER = Logger.getLogger(LookAndFeel.class.getName());
   private static final String LOOK_AND_FEEL_CLASS_NAME_GTK = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";

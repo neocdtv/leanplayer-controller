@@ -1,11 +1,14 @@
-package io.neocdtv.simpleplayer.init;
+package io.neocdtv.leanplayer.controller.init;
 
 import io.neocdtv.EventsHandler;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
 /**
- * Created by xix on 09.12.17.
+ * DeviceDiscoveryEventsHandler.
+ *
+ * @author xix
+ * @since 22.12.17
  */
 public class DeviceDiscoveryEventsHandler implements EventsHandler {
 

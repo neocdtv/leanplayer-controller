@@ -3,18 +3,21 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.ui;
+package io.neocdtv.leanplayer.controller.ui;
 
-import io.neocdtv.simpleplayer.player.Player;
+import io.neocdtv.leanplayer.controller.player.Player;
 
 /**
+ * CombolistEntry.
+ *
  * @author xix
+ * @since 22.12.17
  */
-public class CombolistEntry {
+public class ComboListEntry {
   private final String value;
   private final Player player;
 
-  public CombolistEntry(String value, Player player) {
+  public ComboListEntry(String value, Player player) {
     this.value = value;
     this.player = player;
   }

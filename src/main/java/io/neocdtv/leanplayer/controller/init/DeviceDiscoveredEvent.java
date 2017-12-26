@@ -1,7 +1,10 @@
-package io.neocdtv.simpleplayer.init;
+package io.neocdtv.leanplayer.controller.init;
 
 /**
- * Created by xix on 05.12.17.
+ * DeviceDiscoveredEvent.
+ *
+ * @author xix
+ * @since 22.12.17
  */
 public class DeviceDiscoveredEvent {
 

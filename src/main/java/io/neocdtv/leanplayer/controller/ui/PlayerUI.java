@@ -1,4 +1,4 @@
-package io.neocdtv.simpleplayer.ui;
+package io.neocdtv.leanplayer.controller.ui;
 
 import org.apache.commons.io.IOUtils;
 
@@ -16,11 +16,17 @@ import java.io.StringReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * PlayerUI.
+ *
+ * @author xix
+ * @since 22.12.17
+ */
 public class PlayerUI {
 
   private final static Logger LOGGER = Logger.getLogger(PlaylistUI.class.getName());
   private final PlaylistUI playList = PlaylistUI.getInstance();
-  private static final String PLAYER_TITLE = "Zenplayer-UI";
+  private static final String PLAYER_TITLE = "LeanPlayer";
 
   public void init() {
     JFrame frame = new JFrame();
@@ -37,7 +43,7 @@ public class PlayerUI {
 
   private JPanel buildDevicePanel() {
     JPanel devicePanel = new JPanel(new GridLayout(1, 1));
-    JComboBox<CombolistEntry> comboBox = new JComboBox<>(ComboBoxFactory.instance());
+    JComboBox<ComboListEntry> comboBox = new JComboBox<>(ComboBoxFactory.instance());
     devicePanel.add(comboBox);
     return devicePanel;
   }

@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.ui;
+package io.neocdtv.leanplayer.controller.ui;
 
-import io.neocdtv.simpleplayer.worker.NextWorker;
-import io.neocdtv.simpleplayer.worker.PauseWorker;
-import io.neocdtv.simpleplayer.worker.PlayWorker;
+import io.neocdtv.leanplayer.controller.worker.PauseWorker;
+import io.neocdtv.leanplayer.controller.worker.NextWorker;
+import io.neocdtv.leanplayer.controller.worker.PlayWorker;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,7 +16,10 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 
 /**
+ * ButtonsFactory.
+ *
  * @author xix
+ * @since 22.12.17
  */
 public class ButtonsFactory {
   private final static Logger LOGGER = Logger.getLogger(PlaylistUI.class.getName());

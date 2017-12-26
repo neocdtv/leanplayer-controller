@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.player;
+package io.neocdtv.leanplayer.controller.player;
 
-import io.neocdtv.simpleplayer.ui.ComboBoxFactory;
-import io.neocdtv.simpleplayer.ui.CombolistEntry;
+import io.neocdtv.leanplayer.controller.ui.ComboBoxFactory;
+import io.neocdtv.leanplayer.controller.ui.ComboListEntry;
 
 /**
+ * PlayerFactory.
+ *
  * @author xix
+ * @since 22.12.17
  */
 public class PlayerFactory {
 
@@ -17,7 +20,7 @@ public class PlayerFactory {
   }
 
   public static Player getCurrentPlayer() {
-    final CombolistEntry entry = (CombolistEntry) ComboBoxFactory.instance().getSelectedItem();
+    final ComboListEntry entry = (ComboListEntry) ComboBoxFactory.instance().getSelectedItem();
     return entry.getPlayer();
   }
 }

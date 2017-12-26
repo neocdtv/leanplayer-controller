@@ -3,27 +3,29 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package io.neocdtv.simpleplayer.worker;
+package io.neocdtv.leanplayer.controller.worker;
 
-import io.neocdtv.simpleplayer.player.Player;
-import io.neocdtv.simpleplayer.player.PlayerFactory;
-import io.neocdtv.simpleplayer.ui.PlaylistUI;
+import io.neocdtv.leanplayer.controller.player.Player;
+import io.neocdtv.leanplayer.controller.ui.PlaylistUI;
+import io.neocdtv.leanplayer.controller.player.PlayerFactory;
 
 import javax.swing.*;
 import java.util.logging.Logger;
 
 /**
+ * NextWorker.
+ *
  * @author xix
+ * @since 22.12.17
  */
-public class PlayWorker extends SwingWorker<Void, Void> {
+public class NextWorker extends SwingWorker<Void, Void> {
 
   private final static Logger LOGGER = Logger.getLogger(NextWorker.class.getName());
 
   @Override
   protected Void doInBackground() {
-    final String url = PlaylistUI.getInstance().getSelectedTrackUrl();
+    final String url = PlaylistUI.getInstance().getNextTrackUrl();
     final Player currentPlayer = PlayerFactory.getCurrentPlayer();
-    LOGGER.info("Start playing " + url);
     currentPlayer.play(url);
     return null;
   }

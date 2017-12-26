@@ -7,6 +7,6 @@
       http://java.sun.com/xml/ns/javaee/beans_1_1.xsd">
 <weld:scan>
 
-  <weld:include name="io.neocdtv.simpleplayer.**"/>
+  <weld:include name="io.neocdtv.leanplayer.controller.**"/>
 </weld:scan>
 </beans>
