@@ -9,10 +9,9 @@ package io.neocdtv.leanplayer.controller.init;
 public class DeviceDiscoveredEvent {
 
   private String deviceAddress = "localhost:8081";
-  // TODO: decide what data to transport:
-  // deviceDescription? or extracted deviceName,
-  // deviceAddress is not acurate, you are missing ports for rest and websockets
-  private String deviceName = "Zenplayer";
+  private String deviceName = "LeanPlayer";
+  private String controlPath = "";
+  private String eventsPath = "";
 
   public DeviceDiscoveredEvent(final String deviceAddress, final String deviceName) {
     this.deviceAddress = deviceAddress;
