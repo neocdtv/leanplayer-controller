@@ -38,16 +38,28 @@ public class LeanPlayerControllerMain {
     playerUI.init();
     StreamingService.start();
     deviceDiscovery.init();
-    addDevice("LeanPlayer", "localhost:45152");
+    addDevice(
+        "LeanPlayer",
+        "http://localhost:45152/app/desc.json",
+        "http://localhost:45152/app/rs/control",
+        "ws://localhost:45152/app/events");
   }
 
   public void onDeviceDiscovery(@Observes DeviceDiscoveredEvent event) throws Exception {
-    addDevice(event.getDeviceName(), event.getDeviceAddress());
+    addDevice(
+        event.getDeviceName(),
+        event.getLocation(),
+        event.getControlLocation(),
+        event.getEventsLocation());
   }
 
-  private void addDevice(final String deviceName, final String deviceAddress) {
+  private void addDevice(
+      final String deviceName,
+      final String location,
+      final String controlLocation,
+      final String eventsLocation) {
     final DefaultComboBoxModel<ComboListEntry> comboBoxModel = ComboBoxFactory.instance();
-    comboBoxModel.addElement(new ComboListEntry(deviceName, new LeanPlayer(deviceAddress)));
+    comboBoxModel.addElement(new ComboListEntry(deviceName, new LeanPlayer(location, controlLocation, eventsLocation)));
   }
 
   private static void configureCdi() {

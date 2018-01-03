@@ -29,12 +29,14 @@ public class LeanPlayer implements Player {
 
   private final static Logger LOGGER = Logger.getLogger(LeanPlayer.class.getName());
 
-  private final String baseUrl;
-  private final String restBaseUrl = "/rs/control";
-  private final String webSocketUrl = "/events";
+  private final String location;
+  private final String controlLocation;
+  private final String eventsLocation;
 
-  public LeanPlayer(String baseUrl) {
-    this.baseUrl = baseUrl;
+  public LeanPlayer(final String location, final String controlLocation, final String eventsLocation) {
+    this.location = location;
+    this.controlLocation = controlLocation;
+    this.eventsLocation = eventsLocation;
     openWebSocketConnection();
   }
 
@@ -42,8 +44,7 @@ public class LeanPlayer implements Player {
     final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
     ClientManager client = ClientManager.createClient();
     try {
-      String webSocketAddress = "ws://" + baseUrl + webSocketUrl;
-      LOGGER.info(webSocketAddress);
+      LOGGER.info(eventsLocation);
       client.connectToServer(new Endpoint() {
 
         @Override
@@ -71,7 +72,7 @@ public class LeanPlayer implements Player {
           LOGGER.info(session.getId() + ", exceptionMessage: " + thr.getMessage());
 
         }
-      }, cec, new URI(webSocketAddress));
+      }, cec, new URI(eventsLocation));
     } catch (DeploymentException | URISyntaxException | IOException e) {
       e.printStackTrace();
     }
@@ -80,7 +81,7 @@ public class LeanPlayer implements Player {
   @Override
   public void play(String url) {
     Client client = ClientBuilder.newClient();
-    final Invocation.Builder request = client.target("http://" + baseUrl + restBaseUrl + "/play")
+    final Invocation.Builder request = client.target(controlLocation + "/play")
         .queryParam("url", url)
         .request(MediaType.APPLICATION_JSON);
     request.get();
@@ -89,7 +90,7 @@ public class LeanPlayer implements Player {
   @Override
   public void pause() throws PlayerException {
     Client client = ClientBuilder.newClient();
-    final Invocation.Builder request = client.target("http://" + baseUrl + restBaseUrl + "/pause")
+    final Invocation.Builder request = client.target(controlLocation + "/pause")
         .request(MediaType.APPLICATION_JSON);
     request.get();
   }

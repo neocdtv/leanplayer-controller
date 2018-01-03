@@ -8,21 +8,31 @@ package io.neocdtv.leanplayer.controller.init;
  */
 public class DeviceDiscoveredEvent {
 
-  private String deviceAddress = "localhost:8081";
-  private String deviceName = "LeanPlayer";
-  private String controlPath = "";
-  private String eventsPath = "";
+  private final String deviceName;
+  private final String location;
+  private final String controlLocation;
+  private final String eventsLocation;
 
-  public DeviceDiscoveredEvent(final String deviceAddress, final String deviceName) {
-    this.deviceAddress = deviceAddress;
+  public DeviceDiscoveredEvent(final String deviceName, final String location, final String controlLocation, final String eventsLocation) {
     this.deviceName = deviceName;
-  }
-
-  public String getDeviceAddress() {
-    return deviceAddress;
+    this.location = location;
+    this.controlLocation = controlLocation;
+    this.eventsLocation = eventsLocation;
   }
 
   public String getDeviceName() {
     return deviceName;
+  }
+
+  public String getLocation() {
+    return location;
+  }
+
+  public String getControlLocation() {
+    return controlLocation;
+  }
+
+  public String getEventsLocation() {
+    return eventsLocation;
   }
 }

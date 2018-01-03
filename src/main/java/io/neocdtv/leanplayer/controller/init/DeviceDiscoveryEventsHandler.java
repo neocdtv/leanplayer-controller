@@ -16,7 +16,16 @@ public class DeviceDiscoveryEventsHandler implements EventsHandler {
   private Event<DeviceDiscoveredEvent> deviceDiscoveredEvent;
 
   @Override
-  public void onDeviceDiscovery(String deviceAddress, String deviceDescription) {
-    deviceDiscoveredEvent.fire(new DeviceDiscoveredEvent(deviceAddress, deviceDescription));
+  public void onDeviceDiscovery(
+      final String deviceName,
+      final String location,
+      final String controlLocation,
+      final String eventsLocation) {
+    deviceDiscoveredEvent.fire(
+        new DeviceDiscoveredEvent(
+            deviceName,
+            location,
+            controlLocation,
+            eventsLocation));
   }
 }
