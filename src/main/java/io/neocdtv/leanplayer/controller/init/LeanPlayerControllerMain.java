@@ -38,6 +38,7 @@ public class LeanPlayerControllerMain {
     playerUI.init();
     StreamingService.start();
     deviceDiscovery.init();
+    // TODO: add/implement device discovery. The manual call to addDevice will be afterwards removed
     addDevice(
         "LeanPlayer",
         "http://localhost:45152/app/desc.json",
