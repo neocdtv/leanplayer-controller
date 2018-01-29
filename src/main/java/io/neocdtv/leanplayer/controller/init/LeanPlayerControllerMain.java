@@ -37,30 +37,10 @@ public class LeanPlayerControllerMain {
     lookAndFeel.init();
     playerUI.init();
     StreamingService.start();
-    deviceDiscovery.init();
+    deviceDiscovery.startDiscovery();
     // TODO: add/implement device discovery. The manual call to addDevice will be afterwards removed
-    addDevice(
-        "LeanPlayer",
-        "http://localhost:45152/app/desc.json",
-        "http://localhost:45152/app/rs/control",
-        "ws://localhost:45152/app/events");
-  }
-
-  public void onDeviceDiscovery(@Observes DeviceDiscoveredEvent event) throws Exception {
-    addDevice(
-        event.getDeviceName(),
-        event.getLocation(),
-        event.getControlLocation(),
-        event.getEventsLocation());
-  }
-
-  private void addDevice(
-      final String deviceName,
-      final String location,
-      final String controlLocation,
-      final String eventsLocation) {
-    final DefaultComboBoxModel<ComboListEntry> comboBoxModel = ComboBoxFactory.instance();
-    comboBoxModel.addElement(new ComboListEntry(deviceName, new LeanPlayer(location, controlLocation, eventsLocation)));
+    // TODO: what about device discovery on multiple interfaces
+    // TODO: enable UrlBuilder.build and add to leanplayer-controller, when sending url to leanplayer-renderer
   }
 
   private static void configureCdi() {
