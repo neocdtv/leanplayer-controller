@@ -29,12 +29,10 @@ public class LeanPlayer implements Player {
 
   private final static Logger LOGGER = Logger.getLogger(LeanPlayer.class.getName());
 
-  private final String location;
   private final String controlLocation;
   private final String eventsLocation;
 
-  public LeanPlayer(final String location, final String controlLocation, final String eventsLocation) {
-    this.location = location;
+  public LeanPlayer(final String controlLocation, final String eventsLocation) {
     this.controlLocation = controlLocation;
     this.eventsLocation = eventsLocation;
     openWebSocketConnection();

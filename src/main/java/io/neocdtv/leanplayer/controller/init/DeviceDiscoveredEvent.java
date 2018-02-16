@@ -9,23 +9,17 @@ package io.neocdtv.leanplayer.controller.init;
 public class DeviceDiscoveredEvent {
 
   private final String deviceName;
-  private final String location;
   private final String controlLocation;
   private final String eventsLocation;
 
-  public DeviceDiscoveredEvent(final String deviceName, final String location, final String controlLocation, final String eventsLocation) {
+  public DeviceDiscoveredEvent(final String deviceName, final String controlLocation, final String eventsLocation) {
     this.deviceName = deviceName;
-    this.location = location;
     this.controlLocation = controlLocation;
     this.eventsLocation = eventsLocation;
   }
 
   public String getDeviceName() {
     return deviceName;
-  }
-
-  public String getLocation() {
-    return location;
   }
 
   public String getControlLocation() {

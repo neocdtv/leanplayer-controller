@@ -29,17 +29,15 @@ public class DeviceDiscovery {
   public void onDeviceDiscovery(@Observes DeviceDiscoveredEvent event) throws Exception {
     addDevice(
         event.getDeviceName(),
-        event.getLocation(),
         event.getControlLocation(),
         event.getEventsLocation());
   }
 
   void addDevice(
       final String deviceName,
-      final String location,
       final String controlLocation,
       final String eventsLocation) {
     final DefaultComboBoxModel<ComboListEntry> comboBoxModel = ComboBoxFactory.instance();
-    comboBoxModel.addElement(new ComboListEntry(deviceName, new LeanPlayer(location, controlLocation, eventsLocation)));
+    comboBoxModel.addElement(new ComboListEntry(deviceName, new LeanPlayer(controlLocation, eventsLocation)));
   }
 }

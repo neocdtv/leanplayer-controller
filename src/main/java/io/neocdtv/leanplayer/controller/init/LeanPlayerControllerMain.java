@@ -38,7 +38,6 @@ public class LeanPlayerControllerMain {
     playerUI.init();
     StreamingService.start();
     deviceDiscovery.startDiscovery();
-    // TODO: add/implement device discovery. The manual call to addDevice will be afterwards removed
     // TODO: what about device discovery on multiple interfaces
     // TODO: enable UrlBuilder.build and add to leanplayer-controller, when sending url to leanplayer-renderer
   }
