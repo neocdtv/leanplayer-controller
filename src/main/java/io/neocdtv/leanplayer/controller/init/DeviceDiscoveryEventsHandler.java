@@ -1,6 +1,11 @@
 package io.neocdtv.leanplayer.controller.init;
 
 import io.neocdtv.EventsHandler;
+import io.neocdtv.constants.HeaderHelper;
+import io.neocdtv.constants.HttpConstants;
+import io.neocdtv.constants.LeanPlayerConstants;
+import io.neocdtv.constants.UpnpHelper;
+
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
@@ -17,13 +22,33 @@ public class DeviceDiscoveryEventsHandler implements EventsHandler {
 
   @Override
   public void onDeviceDiscovery(
-      final String deviceName,
-      final String controlLocation,
-      final String eventsLocation) {
-    deviceDiscoveredEvent.fire(
-        new DeviceDiscoveredEvent(
-            deviceName,
-            controlLocation,
-            eventsLocation));
+      final String payload) {
+
+    if (payload.contains(UpnpHelper.MEDIA_RENDERER) &&
+        payload.contains(LeanPlayerConstants.HTTP_HEADER_NAME_CONTROL_LOCATION) &&
+        payload.contains(LeanPlayerConstants.HTTP_HEADER_NAME_EVENTS_LOCATION)) {
+
+      final String deviceName = extractDeviceName(payload);
+      final String controlLocation = extractControlLocation(payload);
+      final String eventsLocation = extractEventsLocation(payload);
+
+      deviceDiscoveredEvent.fire(
+          new DeviceDiscoveredEvent(
+              deviceName,
+              controlLocation,
+              eventsLocation));
+    }
+  }
+
+  private String extractDeviceName(final String receivedMessage) {
+    return HeaderHelper.extractHeader(HttpConstants.HTTP_HEADER_NAME_SERVER, receivedMessage);
+  }
+
+  private String extractControlLocation(final String receivedMessage) {
+    return HeaderHelper.extractHeader(LeanPlayerConstants.HTTP_HEADER_NAME_CONTROL_LOCATION, receivedMessage);
+  }
+
+  private String extractEventsLocation(final String receivedMessage) {
+    return HeaderHelper.extractHeader(LeanPlayerConstants.HTTP_HEADER_NAME_EVENTS_LOCATION, receivedMessage);
   }
 }
