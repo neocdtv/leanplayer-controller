@@ -22,7 +22,8 @@ public class DeviceDiscoveryEventsHandler implements EventsHandler {
 
   @Override
   public void onDeviceDiscovery(
-      final String payload) {
+      final String payload,
+      final String deviceAddress) {
 
     if (payload.contains(UpnpHelper.MEDIA_RENDERER) &&
         payload.contains(LeanPlayerConstants.HTTP_HEADER_NAME_CONTROL_LOCATION) &&

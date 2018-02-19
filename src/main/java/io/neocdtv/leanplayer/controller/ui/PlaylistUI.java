@@ -5,13 +5,12 @@
  */
 package io.neocdtv.leanplayer.controller.ui;
 
+import io.neocdtv.service.UrlBuilder;
+
+import javax.swing.*;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.DropMode;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
 
 /**
  * PlaylistUI.
@@ -64,7 +63,7 @@ public class PlaylistUI extends JList<PlaylistEntry> {
     }
     LOGGER.log(Level.INFO, "selected playlist track {0}", selectedTrackUrl);
     ensureIndexIsVisible(selectedIndex);
-    return selectedTrackUrl;
+    return UrlBuilder.build(selectedTrackUrl);
   }
 
   public String getNextSelectedTrackUrl() {
@@ -84,7 +83,7 @@ public class PlaylistUI extends JList<PlaylistEntry> {
     }
     LOGGER.log(Level.INFO, "next playlist track {0}", nextSelectedTrackUrl);
     ensureIndexIsVisible(selectedIndex);
-    return nextSelectedTrackUrl;
+    return UrlBuilder.build(nextSelectedTrackUrl);
   }
 
   public String getNextTrackUrl() {
@@ -99,7 +98,7 @@ public class PlaylistUI extends JList<PlaylistEntry> {
       nextTrackUrl = getModel().get(playingIndex).getPath();
     }
     ensureIndexIsVisible(playingIndex);
-    return nextTrackUrl;
+    return UrlBuilder.build(nextTrackUrl);
   }
 
   void selectAll() {

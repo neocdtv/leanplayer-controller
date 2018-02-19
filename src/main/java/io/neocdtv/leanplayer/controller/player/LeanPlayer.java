@@ -1,6 +1,7 @@
 package io.neocdtv.leanplayer.controller.player;
 
 import io.neocdtv.leanplayer.controller.ui.PlaylistUI;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.tyrus.client.ClientManager;
 
 import javax.websocket.ClientEndpointConfig;
@@ -78,16 +79,22 @@ public class LeanPlayer implements Player {
 
   @Override
   public void play(String url) {
-    Client client = ClientBuilder.newClient();
+    Client client = configureClient();
     final Invocation.Builder request = client.target(controlLocation + "/play")
         .queryParam("url", url)
         .request(MediaType.APPLICATION_JSON);
     request.get();
   }
 
+  private Client configureClient() {
+    Client client = ClientBuilder.newClient();
+    client.register(LoggingFilter.class);
+    return client;
+  }
+
   @Override
   public void pause() throws PlayerException {
-    Client client = ClientBuilder.newClient();
+    Client client = configureClient();
     final Invocation.Builder request = client.target(controlLocation + "/pause")
         .request(MediaType.APPLICATION_JSON);
     request.get();
