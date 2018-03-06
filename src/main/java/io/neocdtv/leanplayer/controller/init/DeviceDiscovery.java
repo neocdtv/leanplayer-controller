@@ -1,7 +1,7 @@
 package io.neocdtv.leanplayer.controller.init;
 
 import io.neocdtv.UpnpDiscoveryLite;
-import io.neocdtv.constants.UpnpHelper;
+import io.neocdtv.UpnpHelper;
 import io.neocdtv.leanplayer.controller.player.LeanPlayer;
 import io.neocdtv.leanplayer.controller.ui.ComboBoxFactory;
 import io.neocdtv.leanplayer.controller.ui.ComboListEntry;

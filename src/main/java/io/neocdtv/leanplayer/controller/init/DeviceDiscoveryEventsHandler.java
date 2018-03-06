@@ -1,10 +1,10 @@
 package io.neocdtv.leanplayer.controller.init;
 
 import io.neocdtv.EventsHandler;
-import io.neocdtv.constants.HeaderHelper;
-import io.neocdtv.constants.HttpConstants;
-import io.neocdtv.constants.LeanPlayerConstants;
-import io.neocdtv.constants.UpnpHelper;
+import io.neocdtv.HeaderHelper;
+import io.neocdtv.HttpConstants;
+import io.neocdtv.LeanPlayerConstants;
+import io.neocdtv.UpnpHelper;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
