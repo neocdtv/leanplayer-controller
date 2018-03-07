@@ -1,8 +1,7 @@
-package io.neocdtv.leanplayer.controller.init;
+package io.neocdtv.leanplayer.controller;
 
-import io.neocdtv.leanplayer.controller.player.LeanPlayer;
-import io.neocdtv.leanplayer.controller.ui.ComboBoxFactory;
-import io.neocdtv.leanplayer.controller.ui.ComboListEntry;
+import io.neocdtv.leanplayer.controller.discovery.DeviceDiscovery;
+import io.neocdtv.leanplayer.controller.ui.LookAndFeel;
 import io.neocdtv.leanplayer.controller.ui.PlayerUI;
 import io.neocdtv.service.StreamingService;
 import org.jboss.weld.environment.se.Weld;
@@ -10,7 +9,6 @@ import org.jboss.weld.environment.se.events.ContainerInitialized;
 
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import javax.swing.*;
 
 /**
  * LeanPlayerControllerMain.

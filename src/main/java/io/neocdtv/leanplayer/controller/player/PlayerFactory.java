@@ -5,8 +5,8 @@
  */
 package io.neocdtv.leanplayer.controller.player;
 
-import io.neocdtv.leanplayer.controller.ui.ComboBoxFactory;
-import io.neocdtv.leanplayer.controller.ui.ComboListEntry;
+import io.neocdtv.leanplayer.controller.ui.PlayerSelectionListFactory;
+import io.neocdtv.leanplayer.controller.ui.PlayerSelectionEntry;
 
 /**
  * PlayerFactory.
@@ -20,7 +20,7 @@ public class PlayerFactory {
   }
 
   public static Player getCurrentPlayer() {
-    final ComboListEntry entry = (ComboListEntry) ComboBoxFactory.instance().getSelectedItem();
+    final PlayerSelectionEntry entry = (PlayerSelectionEntry) PlayerSelectionListFactory.instance().getSelectedItem();
     return entry.getPlayer();
   }
 }

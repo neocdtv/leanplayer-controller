@@ -43,7 +43,7 @@ public class PlayerUI {
 
   private JPanel buildDevicePanel() {
     JPanel devicePanel = new JPanel(new GridLayout(1, 1));
-    JComboBox<ComboListEntry> comboBox = new JComboBox<>(ComboBoxFactory.instance());
+    JComboBox<PlayerSelectionEntry> comboBox = new JComboBox<>(PlayerSelectionListFactory.instance());
     devicePanel.add(comboBox);
     return devicePanel;
   }

@@ -13,11 +13,11 @@ import io.neocdtv.leanplayer.controller.player.Player;
  * @author xix
  * @since 22.12.17
  */
-public class ComboListEntry {
+public class PlayerSelectionEntry {
   private final String value;
   private final Player player;
 
-  public ComboListEntry(String value, Player player) {
+  public PlayerSelectionEntry(String value, Player player) {
     this.value = value;
     this.player = player;
   }

@@ -13,14 +13,14 @@ import javax.swing.DefaultComboBoxModel;
  * @author xix
  * @since 22.12.17
  */
-public class ComboBoxFactory {
+public class PlayerSelectionListFactory {
 
-  private static DefaultComboBoxModel<ComboListEntry> INSTANCE;
+  private static DefaultComboBoxModel<PlayerSelectionEntry> INSTANCE;
 
-  private ComboBoxFactory() {
+  private PlayerSelectionListFactory() {
   }
 
-  public static DefaultComboBoxModel<ComboListEntry> instance() {
+  public static DefaultComboBoxModel<PlayerSelectionEntry> instance() {
     if (INSTANCE == null) {
       INSTANCE = new DefaultComboBoxModel<>();
     }

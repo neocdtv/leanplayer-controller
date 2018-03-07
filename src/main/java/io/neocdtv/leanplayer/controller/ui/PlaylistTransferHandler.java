@@ -53,7 +53,7 @@ import org.apache.commons.io.FileUtils;
 
 public class PlaylistTransferHandler extends TransferHandler {
 
-  private final static Logger LOGGER = Logger.getLogger(io.neocdtv.leanplayer.controller.init.LookAndFeel.class.getName());
+  private final static Logger LOGGER = Logger.getLogger(LookAndFeel.class.getName());
 
   private int[] indices = null;
   private int addIndex = -1; //Location where items were added

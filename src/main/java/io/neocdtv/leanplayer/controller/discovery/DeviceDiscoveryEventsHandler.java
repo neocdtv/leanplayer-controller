@@ -1,4 +1,4 @@
-package io.neocdtv.leanplayer.controller.init;
+package io.neocdtv.leanplayer.controller.discovery;
 
 import io.neocdtv.EventsHandler;
 import io.neocdtv.HeaderHelper;
