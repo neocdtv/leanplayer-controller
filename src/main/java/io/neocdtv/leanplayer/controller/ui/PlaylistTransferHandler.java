@@ -40,16 +40,19 @@ package io.neocdtv.leanplayer.controller.ui;
  * ListTransferHandler.java is used by the DropDemo example.
  */
 
+import org.apache.commons.io.FileUtils;
+
 import javax.swing.*;
-import java.awt.datatransfer.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.io.FileUtils;
 
 public class PlaylistTransferHandler extends TransferHandler {
 
@@ -139,6 +142,7 @@ public class PlaylistTransferHandler extends TransferHandler {
 
   //Take the incoming string and wherever there is a
   //newline, break it into a separate item in the list.
+  // TODO: do i need this method?
   protected void importString(JComponent c, String str) {
     JList target = (JList) c;
     DefaultListModel listModel = (DefaultListModel) target.getModel();

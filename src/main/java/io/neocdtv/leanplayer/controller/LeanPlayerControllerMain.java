@@ -32,9 +32,9 @@ public class LeanPlayerControllerMain {
   }
 
   public void main(@Observes ContainerInitialized event) throws Exception {
-    lookAndFeel.init();
-    playerUI.init();
-    StreamingService.start();
+    lookAndFeel.startIt();
+    playerUI.startIt();
+    StreamingService.startIt();
     deviceDiscovery.startDiscovery();
     // TODO: what about device discovery on multiple interfaces
     // TODO: enable UrlBuilder.build and add to leanplayer-controller, when sending url to leanplayer-renderer

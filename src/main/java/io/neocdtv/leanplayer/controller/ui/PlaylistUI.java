@@ -6,8 +6,16 @@
 package io.neocdtv.leanplayer.controller.ui;
 
 import io.neocdtv.service.UrlBuilder;
+import org.apache.commons.io.IOUtils;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -39,8 +47,45 @@ public class PlaylistUI extends JList<PlaylistEntry> {
     setDragEnabled(true);
     setTransferHandler(new PlaylistTransferHandler());
     setDropMode(DropMode.INSERT);
+
+    addKeyListener(new KeyListener() {
+      @Override
+      public void keyTyped(KeyEvent e) {
+        LOGGER.log(Level.INFO, "keyTyped: {0}:", e.getKeyCode());
+      }
+
+      @Override
+      public void keyPressed(KeyEvent e) {
+        LOGGER.log(Level.INFO, "keyPressed: {0}:", e.getKeyCode());
+        if ((e.getKeyCode()
+            == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+          try {
+            final StringReader valueFromClipboardReader = getValueFromClipboard(DataFlavor.plainTextFlavor);
+            final String valueFromString = IOUtils.toString(valueFromClipboardReader);
+            LOGGER.log(Level.INFO, "fromClipBoard: {0}:", valueFromString);
+            addElement(valueFromString);
+          } catch (IOException ex) {
+            LOGGER.log(Level.SEVERE, null, ex);
+          }
+        }
+        if ((e.getKeyCode()
+            == KeyEvent.VK_A) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+          selectAll();
+        }
+        if (e.getKeyCode()
+            == KeyEvent.VK_DELETE) {
+          removeSelected();
+        }
+      }
+
+      @Override
+      public void keyReleased(KeyEvent e) {
+        LOGGER.log(Level.INFO, "keyReleased: {0}:", e.getKeyCode());
+      }
+    });
   }
 
+  // TODO: is this right? looks strange
   @Override
   public DefaultListModel<PlaylistEntry> getModel() {
     return (DefaultListModel<PlaylistEntry>) super.getModel();
@@ -116,5 +161,15 @@ public class PlaylistUI extends JList<PlaylistEntry> {
     for (PlaylistEntry entry : selectedValuesList) {
       model.removeElement(entry);
     }
+  }
+
+  private <T> T getValueFromClipboard(final DataFlavor flavor) {
+    T valueFromClipboard = null;
+    try {
+      valueFromClipboard = (T) Toolkit.getDefaultToolkit().getSystemClipboard().getData(flavor);
+    } catch (UnsupportedFlavorException | IOException ex) {
+      LOGGER.log(Level.SEVERE, null, ex);
+    }
+    return valueFromClipboard;
   }
 }

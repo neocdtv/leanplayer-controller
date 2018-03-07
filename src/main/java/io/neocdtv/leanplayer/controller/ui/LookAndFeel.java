@@ -31,7 +31,7 @@ public class LookAndFeel {
       LOOK_AND_FEEL_CLASS_NAME_WINDOWS,
       LOOK_AND_FEEL_CLASS_NAME_MACINTOSH);
 
-  public void init() {
+  public void startIt() {
     LOGGER.log(Level.INFO, "configuring look and feel");
     try {
       UIManager.setLookAndFeel(determineNativeLookAndFeel());
