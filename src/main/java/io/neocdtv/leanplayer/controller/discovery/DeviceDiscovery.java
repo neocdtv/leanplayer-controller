@@ -3,8 +3,8 @@ package io.neocdtv.leanplayer.controller.discovery;
 import io.neocdtv.UpnpDiscoveryLite;
 import io.neocdtv.UpnpHelper;
 import io.neocdtv.leanplayer.controller.player.LeanPlayer;
-import io.neocdtv.leanplayer.controller.ui.PlayerSelectionListFactory;
 import io.neocdtv.leanplayer.controller.ui.PlayerSelectionEntry;
+import io.neocdtv.leanplayer.controller.ui.PlayerSelectionList;
 
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
@@ -20,6 +20,9 @@ public class DeviceDiscovery {
 
   @Inject
   private DeviceDiscoveryEventsHandler deviceDiscoveryEventsHandler;
+
+  @Inject
+  private PlayerSelectionList playerSelectionList;
 
   public void startDiscovery() {
     final String uuid = UpnpHelper.buildUuid();
@@ -37,7 +40,7 @@ public class DeviceDiscovery {
       final String deviceName,
       final String controlLocation,
       final String eventsLocation) {
-    final DefaultComboBoxModel<PlayerSelectionEntry> comboBoxModel = PlayerSelectionListFactory.instance();
+    final DefaultComboBoxModel<PlayerSelectionEntry> comboBoxModel = playerSelectionList.getModel();
     comboBoxModel.addElement(new PlayerSelectionEntry(deviceName, new LeanPlayer(controlLocation, eventsLocation)));
   }
 }

@@ -1,9 +1,10 @@
 package io.neocdtv.leanplayer.controller.ui;
 
-import io.neocdtv.leanplayer.controller.worker.NextWorker;
+import io.neocdtv.leanplayer.controller.worker.Next;
 import io.neocdtv.leanplayer.controller.worker.PauseWorker;
 import io.neocdtv.leanplayer.controller.worker.PlayWorker;
 
+import javax.inject.Inject;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -26,6 +27,12 @@ public class PlayerUI {
   private final PlaylistUI playList = PlaylistUI.getInstance();
   private static final String PLAYER_TITLE = "LeanPlayer Controller";
 
+  @Inject
+  private Next nextStuff;
+
+  @Inject
+  private PlayerSelectionList playerSelectionList;
+
   public void startIt() {
     JFrame frame = new JFrame();
     frame.setTitle(PLAYER_TITLE);
@@ -41,15 +48,19 @@ public class PlayerUI {
 
   private JPanel buildDevicePanel() {
     JPanel devicePanel = new JPanel(new GridLayout(1, 1));
-    JComboBox<PlayerSelectionEntry> comboBox = new JComboBox<>(PlayerSelectionListFactory.instance());
+    JComboBox<PlayerSelectionEntry> comboBox = new JComboBox<>(playerSelectionList.getModel());
     devicePanel.add(comboBox);
     return devicePanel;
   }
 
+
+
   private JPanel buildBottomPanel() {
     JPanel panel = new JPanel(new GridLayout(2, 1));
     panel.add(buildButtonPanel());
-    panel.add(PlayerStateFieldFactory.instance());
+    JTextField field = new JTextField();
+    field.setEnabled(false);
+    panel.add(field);
     return panel;
   }
 
@@ -86,59 +97,59 @@ public class PlayerUI {
   }
 
   public static JButton buildPlayButton() {
-    JButton play = new JButton("play");
-    play.addActionListener(actionEvent -> {
+    JButton button = new JButton("play");
+    button.addActionListener(actionEvent -> {
         LOGGER.log(Level.INFO, "actionPerformed");
         new PlayWorker().execute();
       });
-    return play;
+    return button;
   }
 
   public JButton buildPauseButton() {
-    JButton pause = new JButton("pause");
-    pause.addActionListener(new ActionListener() {
+    JButton button = new JButton("pause");
+    button.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
           LOGGER.log(Level.INFO, "actionPerformed");
           new PauseWorker().execute();
         }
       });
-    return pause;
+    return button;
   }
 
   public JButton buildNextButton() {
-    JButton next = new JButton("next");
-    next.addActionListener(new ActionListener() {
+    JButton button = new JButton("next");
+    button.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
           LOGGER.log(Level.INFO, "actionPerformed");
-          new NextWorker().execute();
+          nextStuff.execute();
         }
       });
-    return next;
+    return button;
   }
 
   public JButton buildVolumeDownButton() {
-    JButton volumeDown = new JButton("-");
-    volumeDown.addActionListener(new ActionListener() {
+    JButton button = new JButton("-");
+    button.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
           LOGGER.log(Level.INFO, "actionPerformed");
           //new VolumeDownWorker().execute();
         }
       });
-    return volumeDown;
+    return button;
   }
 
   public static JButton buildVolumeUpButton() {
-    JButton volumeUp = new JButton("+");
-    volumeUp.addActionListener(new ActionListener() {
+    JButton button = new JButton("+");
+    button.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
           LOGGER.log(Level.INFO, "actionPerformed");
           //new VolumeUpWorker().execute();
         }
       });
-    return volumeUp;
+    return button;
   }
 }
