@@ -6,11 +6,8 @@
 package io.neocdtv.leanplayer.controller.worker;
 
 import io.neocdtv.leanplayer.controller.player.Player;
-import io.neocdtv.leanplayer.controller.player.PlayerException;
-import io.neocdtv.leanplayer.controller.player.PlayerFactory;
 
 import javax.swing.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -23,16 +20,15 @@ public class PauseWorker extends SwingWorker<Void, Void> {
 
   private final static Logger LOGGER = Logger.getLogger(PauseWorker.class.getName());
 
+  private Player player;
+
   @Override
   protected Void doInBackground() {
-    try {
-      final Player currentPlayer = PlayerFactory.getCurrentPlayer();
-      currentPlayer.pause();
+    player.pause();
+    return null;
+  }
 
-    } catch (PlayerException ex) {
-      LOGGER.log(Level.SEVERE, null, ex);
-    } finally {
-      return null;
-    }
+  public void setPlayer(Player player) {
+    this.player = player;
   }
 }

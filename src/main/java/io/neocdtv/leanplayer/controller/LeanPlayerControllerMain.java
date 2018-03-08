@@ -37,7 +37,6 @@ public class LeanPlayerControllerMain {
     StreamingService.startIt();
     deviceDiscovery.startDiscovery();
     // TODO: what about device discovery on multiple interfaces
-    // TODO: enable UrlBuilder.build and add to leanplayer-controller, when sending url to leanplayer-renderer
   }
 
   private static void configureCdi() {

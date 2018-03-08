@@ -1,8 +1,8 @@
 package io.neocdtv.leanplayer.controller.ui;
 
 import io.neocdtv.leanplayer.controller.worker.Next;
-import io.neocdtv.leanplayer.controller.worker.PauseWorker;
-import io.neocdtv.leanplayer.controller.worker.PlayWorker;
+import io.neocdtv.leanplayer.controller.worker.Pause;
+import io.neocdtv.leanplayer.controller.worker.Play;
 
 import javax.inject.Inject;
 import javax.swing.*;
@@ -23,12 +23,20 @@ import java.util.logging.Logger;
  */
 public class PlayerUI {
 
-  private final static Logger LOGGER = Logger.getLogger(PlaylistUI.class.getName());
-  private final PlaylistUI playList = PlaylistUI.getInstance();
+  private final static Logger LOGGER = Logger.getLogger(Playlist.class.getName());
   private static final String PLAYER_TITLE = "LeanPlayer Controller";
 
   @Inject
-  private Next nextStuff;
+  private Next next;
+
+  @Inject
+  private Play play;
+
+  @Inject
+  private Pause pause;
+
+  @Inject
+  private Playlist playlist;
 
   @Inject
   private PlayerSelectionList playerSelectionList;
@@ -77,7 +85,7 @@ public class PlayerUI {
   private JScrollPane buildPlaylist() {
     JScrollPane scrollPane = new JScrollPane();
     scrollPane.setPreferredSize(new Dimension(300, 400));
-    scrollPane.setViewportView(playList);
+    scrollPane.setViewportView(playlist.getPlaylistUI());
     scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
     final TitledBorder createTitledBorder = BorderFactory.createTitledBorder("Playlist");
     createTitledBorder.setTitleJustification(TitledBorder.CENTER);
@@ -96,12 +104,15 @@ public class PlayerUI {
     });
   }
 
-  public static JButton buildPlayButton() {
+  public JButton buildPlayButton() {
     JButton button = new JButton("play");
-    button.addActionListener(actionEvent -> {
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
         LOGGER.log(Level.INFO, "actionPerformed");
-        new PlayWorker().execute();
-      });
+        play.execute();
+      }
+    });
     return button;
   }
 
@@ -111,7 +122,7 @@ public class PlayerUI {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
           LOGGER.log(Level.INFO, "actionPerformed");
-          new PauseWorker().execute();
+          pause.execute();
         }
       });
     return button;
@@ -123,7 +134,7 @@ public class PlayerUI {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
           LOGGER.log(Level.INFO, "actionPerformed");
-          nextStuff.execute();
+          next.execute();
         }
       });
     return button;

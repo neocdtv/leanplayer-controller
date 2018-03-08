@@ -12,15 +12,14 @@ package io.neocdtv.leanplayer.controller.player;
  * @since 22.12.17
  */
 
-// TODO: is this interface required
 public interface Player {
   void play(final String url);
 
-  void pause() throws PlayerException;
+  void pause();
 
-  void next() throws PlayerException;
+  void next();
 
-  void volumeUp() throws PlayerException;
+  void volumeUp();
 
-  void volumeDown() throws PlayerException;
+  void volumeDown();
 }

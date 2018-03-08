@@ -11,15 +11,15 @@ import javax.inject.Inject;
  * @author xix
  * @since 07.03.18
  */
-public class Next {
+public class Play {
 
   @Inject
   private Playlist playlist;
 
   public void execute() {
-    final NextWorker nextWorker = new NextWorker();
-    nextWorker.setPlayer(PlayerFactory.getCurrentPlayer());
-    nextWorker.setPlaylist(playlist);
-    nextWorker.execute();
+    final PlayWorker playWorker = new PlayWorker();
+    playWorker.setPlayer(PlayerFactory.getCurrentPlayer());
+    playWorker.setPlaylist(playlist);
+    playWorker.execute();
   }
 }

@@ -6,7 +6,7 @@
 package io.neocdtv.leanplayer.controller.worker;
 
 import io.neocdtv.leanplayer.controller.player.Player;
-import io.neocdtv.leanplayer.controller.ui.PlaylistUI;
+import io.neocdtv.leanplayer.controller.ui.Playlist;
 
 import javax.swing.*;
 import java.util.logging.Logger;
@@ -21,18 +21,18 @@ public class NextWorker extends SwingWorker<Void, Void> {
 
   private final static Logger LOGGER = Logger.getLogger(NextWorker.class.getName());
 
-  private PlaylistUI playlistUI;
+  private Playlist playlist;
   private Player player;
 
   @Override
   protected Void doInBackground() {
-    final String url = playlistUI.getNextTrackUrl();
+    final String url = playlist.getPlaylistUI().getNextTrackUrl();
     player.play(url);
     return null;
   }
 
-  public void setPlaylistUI(PlaylistUI playlistUI) {
-    this.playlistUI = playlistUI;
+  public void setPlaylist(Playlist playlist) {
+    this.playlist = playlist;
   }
 
   public void setPlayer(Player player) {

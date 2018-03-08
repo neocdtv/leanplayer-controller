@@ -24,6 +24,9 @@ public class DeviceDiscovery {
   @Inject
   private PlayerSelectionList playerSelectionList;
 
+  @Inject
+  private LeanPlayer leanPlayer;
+
   public void startDiscovery() {
     final String uuid = UpnpHelper.buildUuid();
     UpnpDiscoveryLite.startIt(deviceDiscoveryEventsHandler, uuid);
@@ -41,6 +44,9 @@ public class DeviceDiscovery {
       final String controlLocation,
       final String eventsLocation) {
     final DefaultComboBoxModel<PlayerSelectionEntry> comboBoxModel = playerSelectionList.getModel();
-    comboBoxModel.addElement(new PlayerSelectionEntry(deviceName, new LeanPlayer(controlLocation, eventsLocation)));
+    leanPlayer.setEventsLocation(eventsLocation);
+    leanPlayer.setControlLocation(controlLocation);
+    leanPlayer.openWebSocketConnection();
+    comboBoxModel.addElement(new PlayerSelectionEntry(deviceName, leanPlayer));
   }
 }

@@ -1,9 +1,10 @@
 package io.neocdtv.leanplayer.controller.player;
 
-import io.neocdtv.leanplayer.controller.ui.PlaylistUI;
+import io.neocdtv.leanplayer.controller.ui.Playlist;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.glassfish.tyrus.client.ClientManager;
 
+import javax.inject.Inject;
 import javax.websocket.ClientEndpointConfig;
 import javax.websocket.CloseReason;
 import javax.websocket.DeploymentException;
@@ -21,7 +22,7 @@ import java.net.URISyntaxException;
 import java.util.logging.Logger;
 
 /**
- * ZenPlayer.
+ * LeanPlayer.
  *
  * @author xix
  * @since 22.12.17
@@ -30,16 +31,21 @@ public class LeanPlayer implements Player {
 
   private final static Logger LOGGER = Logger.getLogger(LeanPlayer.class.getName());
 
-  private final String controlLocation;
-  private final String eventsLocation;
+  private String controlLocation;
+  private String eventsLocation;
 
-  public LeanPlayer(final String controlLocation, final String eventsLocation) {
+  @Inject
+  private Playlist playlist;
+
+  public void setControlLocation(String controlLocation) {
     this.controlLocation = controlLocation;
-    this.eventsLocation = eventsLocation;
-    openWebSocketConnection();
   }
 
-  private void openWebSocketConnection() {
+  public void setEventsLocation(String eventsLocation) {
+    this.eventsLocation = eventsLocation;
+  }
+
+  public void openWebSocketConnection() {
     final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
     ClientManager client = ClientManager.createClient();
     try {
@@ -93,7 +99,7 @@ public class LeanPlayer implements Player {
   }
 
   @Override
-  public void pause() throws PlayerException {
+  public void pause() {
     Client client = configureClient();
     final Invocation.Builder request = client.target(controlLocation + "/pause")
         .request(MediaType.APPLICATION_JSON);
@@ -102,17 +108,17 @@ public class LeanPlayer implements Player {
 
   @Override
   public void next() {
-    final String url = PlaylistUI.getInstance().getNextTrackUrl();
+    final String url = playlist.getPlaylistUI().getNextTrackUrl();
     play(url);
   }
 
   @Override
-  public void volumeUp() throws PlayerException {
+  public void volumeUp() {
 
   }
 
   @Override
-  public void volumeDown() throws PlayerException {
+  public void volumeDown() {
 
   }
 }
