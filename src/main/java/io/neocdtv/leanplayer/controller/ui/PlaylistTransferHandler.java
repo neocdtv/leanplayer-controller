@@ -83,6 +83,7 @@ public class PlaylistTransferHandler extends TransferHandler {
       return false;
     }
 
+    //TODO: how make it type safe?
     JList list = (JList) info.getComponent();
     DefaultListModel<PlaylistEntry> listModel = (DefaultListModel) list.getModel();
     JList.DropLocation dropLocation = (JList.DropLocation) info.getDropLocation();

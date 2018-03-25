@@ -1,10 +1,9 @@
 package io.neocdtv.leanplayer.controller.discovery;
 
-import io.neocdtv.EventsHandler;
-import io.neocdtv.HeaderHelper;
-import io.neocdtv.HttpConstants;
-import io.neocdtv.LeanPlayerConstants;
-import io.neocdtv.UpnpHelper;
+import io.neocdtv.upnp.discovery.HeaderHelper;
+import io.neocdtv.upnp.discovery.HttpConstants;
+import io.neocdtv.upnp.discovery.LeanPlayerConstants;
+import io.neocdtv.upnp.discovery.UpnpHelper;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
@@ -15,7 +14,7 @@ import javax.inject.Inject;
  * @author xix
  * @since 22.12.17
  */
-public class DeviceDiscoveryEventsHandler implements EventsHandler {
+public class DeviceDiscoveryEventsHandler implements io.neocdtv.upnp.discovery.DeviceDiscoveryEventsHandler {
 
   @Inject
   private Event<DeviceDiscoveredEvent> deviceDiscoveredEvent;

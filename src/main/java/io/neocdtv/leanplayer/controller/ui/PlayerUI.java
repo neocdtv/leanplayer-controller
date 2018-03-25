@@ -63,6 +63,27 @@ public class PlayerUI {
 
 
 
+  private JScrollPane buildPlaylist() {
+    JScrollPane scrollPane = new JScrollPane();
+    scrollPane.setPreferredSize(new Dimension(300, 400));
+    scrollPane.setViewportView(playlist.getPlaylistUI());
+    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+    final TitledBorder createTitledBorder = BorderFactory.createTitledBorder("Playlist");
+    createTitledBorder.setTitleJustification(TitledBorder.CENTER);
+    scrollPane.setBorder(createTitledBorder);
+    return scrollPane;
+  }
+
+  private void defineBehaviourOnWindowClose(JFrame frame) {
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.addWindowListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        e.getWindow().dispose();
+      }
+    });
+  }
+
   private JPanel buildBottomPanel() {
     JPanel panel = new JPanel(new GridLayout(2, 1));
     panel.add(buildButtonPanel());
@@ -80,28 +101,6 @@ public class PlayerUI {
     buttonPanel.add(buildVolumeDownButton());
     buttonPanel.add(buildVolumeUpButton());
     return buttonPanel;
-  }
-
-  private JScrollPane buildPlaylist() {
-    JScrollPane scrollPane = new JScrollPane();
-    scrollPane.setPreferredSize(new Dimension(300, 400));
-    scrollPane.setViewportView(playlist.getPlaylistUI());
-    scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-    final TitledBorder createTitledBorder = BorderFactory.createTitledBorder("Playlist");
-    createTitledBorder.setTitleJustification(TitledBorder.CENTER);
-    scrollPane.setBorder(createTitledBorder);
-    return scrollPane;
-  }
-
-
-  private void defineBehaviourOnWindowClose(JFrame frame) {
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        e.getWindow().dispose();
-      }
-    });
   }
 
   public JButton buildPlayButton() {

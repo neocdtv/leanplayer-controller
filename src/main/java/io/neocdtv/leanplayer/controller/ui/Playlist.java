@@ -10,6 +10,8 @@ import org.apache.commons.io.IOUtils;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -34,7 +36,14 @@ public class Playlist {
   private final static Logger LOGGER = Logger.getLogger(io.neocdtv.leanplayer.controller.ui.Playlist.class.getName());
   private PlaylistUI playlistUI = new PlaylistUI();
 
+  // TODO:TEMP
   public PlaylistUI getPlaylistUI() {
+    playlistUI.addListSelectionListener(new ListSelectionListener() {
+      @Override
+      public void valueChanged(ListSelectionEvent e) {
+        LOGGER.info("XXX: " + e.toString());
+      }
+    });
     return playlistUI;
   }
 
@@ -57,25 +66,9 @@ public class Playlist {
         @Override
         public void keyPressed(KeyEvent e) {
           LOGGER.log(Level.INFO, "keyPressed: {0}:", e.getKeyCode());
-          if ((e.getKeyCode()
-              == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-            try {
-              final StringReader valueFromClipboardReader = getValueFromClipboard(DataFlavor.plainTextFlavor);
-              final String valueFromString = IOUtils.toString(valueFromClipboardReader);
-              LOGGER.log(Level.INFO, "fromClipBoard: {0}:", valueFromString);
-              addElement(valueFromString);
-            } catch (IOException ex) {
-              LOGGER.log(Level.SEVERE, null, ex);
-            }
-          }
-          if ((e.getKeyCode()
-              == KeyEvent.VK_A) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
-            selectAll();
-          }
-          if (e.getKeyCode()
-              == KeyEvent.VK_DELETE) {
-            removeSelected();
-          }
+          handlePaste(e);
+          handleSelectAll(e);
+          handleRemoveSelected(e);
         }
 
         @Override
@@ -83,6 +76,34 @@ public class Playlist {
           LOGGER.log(Level.INFO, "keyReleased: {0}:", e.getKeyCode());
         }
       });
+    }
+
+    private void handleRemoveSelected(KeyEvent e) {
+      if (e.getKeyCode()
+          == KeyEvent.VK_DELETE) {
+        removeSelected();
+      }
+    }
+
+    private void handleSelectAll(KeyEvent e) {
+      if ((e.getKeyCode()
+          == KeyEvent.VK_A) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+        selectAll();
+      }
+    }
+
+    private void handlePaste(KeyEvent e) {
+      if ((e.getKeyCode()
+          == KeyEvent.VK_V) && ((e.getModifiers() & KeyEvent.CTRL_MASK) != 0)) {
+        try {
+          final StringReader valueFromClipboardReader = getValueFromClipboard(DataFlavor.plainTextFlavor);
+          final String valueFromString = IOUtils.toString(valueFromClipboardReader);
+          LOGGER.log(Level.INFO, "fromClipBoard: {0}:", valueFromString);
+          addElement(valueFromString);
+        } catch (IOException ex) {
+          LOGGER.log(Level.SEVERE, null, ex);
+        }
+      }
     }
 
     // TODO: is this right? looks strange
@@ -136,6 +157,8 @@ public class Playlist {
       String nextTrackUrl = null;
       if (getModel().getSize() > 0 && playingIndex >= 0) {
         playingIndex++;
+
+        // no next entry, so start from the beginning
         if (playingIndex >= getModel().getSize()) {
           playingIndex = 0;
         }

@@ -1,7 +1,7 @@
 package io.neocdtv.leanplayer.controller.discovery;
 
-import io.neocdtv.UpnpDiscoveryLite;
-import io.neocdtv.UpnpHelper;
+import io.neocdtv.upnp.discovery.UpnpDiscoveryLite;
+import io.neocdtv.upnp.discovery.UpnpHelper;
 import io.neocdtv.leanplayer.controller.player.LeanPlayer;
 import io.neocdtv.leanplayer.controller.ui.PlayerSelectionEntry;
 import io.neocdtv.leanplayer.controller.ui.PlayerSelectionList;
