@@ -8,7 +8,7 @@ product backlog
 - create docs
 - create releases on github
 - add tests - how to test the gui
-- checkout smb support on mplayer (ok) and omxplayer (todo)
+- checkout smb support on mplayer (ok) and omxplayer (todo), chromecast (not ok)
 - smb how to?
 - improve controller reaction to chromecasts ChromeCastConnectionEvent.isConnected == false,
     try to reconnect
@@ -22,8 +22,11 @@ product backlog
     try protocols supported by omxplayer and mplayer
     is there a possibility to have http with seeking for streamingservice?
     gui
+- check/fix support of sending pasted urls
+
 
 - improve logging, use level
+- check out
 
 - NEW PLAYER: add support for dlna
 - improve logging

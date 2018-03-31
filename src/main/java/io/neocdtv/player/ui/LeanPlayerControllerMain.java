@@ -13,11 +13,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * GenericControllerMain.
+ * LeanPlayerControllerMain.
  */
-public class GenericControllerMain {
+public class LeanPlayerControllerMain {
 
-  private final static Logger LOGGER = Logger.getLogger(GenericControllerMain.class.getName());
+  private final static Logger LOGGER = Logger.getLogger(LeanPlayerControllerMain.class.getName());
 
 
   @Inject
