@@ -1,0 +1,30 @@
+Prio:
+- improve chromecast stability
+- move project from generic-controller to leanplayer-controller
+
+product backlog
+- check todos
+- support playlists m3u - save, load
+- create docs
+- create releases on github
+- add tests - how to test the gui
+- checkout smb support on mplayer (ok) and omxplayer (todo)
+- smb how to?
+- improve controller reaction to chromecasts ChromeCastConnectionEvent.isConnected == false,
+    try to reconnect
+    check if something is playing and check if the registered event handles are still in place/registered
+- implement volume up/down - ideally use a slider
+- show errors in a dialog to the user??
+- refactor packages
+- how to react on player change in renderer list? stop playing on the current device and start on the other device?
+- react on websocket connection error - leanplayer
+- add seeking
+    try protocols supported by omxplayer and mplayer
+    is there a possibility to have http with seeking for streamingservice?
+    gui
+
+- improve logging, use level
+
+- NEW PLAYER: add support for dlna
+- improve logging
+- add device removal
