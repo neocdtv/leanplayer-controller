@@ -65,13 +65,14 @@ public class ChromeCastDiscovery implements RendererDiscovery {
           final ChromeCastPlayer player = createPlayer();
           LOGGER.info("Device discovered: " + chromeCast.getName());
           player.start(chromeCast);
-          RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getName(), chromeCast.getTitle(), player);
+          RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getTitle()  + " (" + chromeCast.getModel() + ")", chromeCast.getName(), player);
           rendererDiscoveryEvent.fire(autoDiscoveryEvent);
         }
         @Override
         public void chromeCastRemoved(ChromeCast chromeCast) {
           LOGGER.info("Device lost: "+ chromeCast.getName());
-          rendererLostEvent.fire(RendererLostEvent.create(chromeCast.getName()));
+          // chromeCastRemoved is called even the device seems to work correctly
+          // rendererLostEvent.fire(RendererLostEvent.create(chromeCast.getName()));
         }
       });
       networkUtil.findIpv4AddressForActiveInterfaces().stream().forEach(address -> {

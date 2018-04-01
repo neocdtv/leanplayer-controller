@@ -30,6 +30,7 @@ public class RendererListController {
 
   public void onRendererLost(@Observes RendererLostEvent rendererLostEvent) {
     if (rendererList.contains(rendererLostEvent.getId())) {
+      // TODO: destroy player set to null
       rendererList.remove(rendererLostEvent.getId());
     }
   }
