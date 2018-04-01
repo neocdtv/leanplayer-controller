@@ -18,4 +18,25 @@ public class RendererList {
   public DefaultComboBoxModel<RendererListEntry> getModel() {
     return model;
   }
+
+  public boolean contains(final String id) {
+    final int size = model.getSize();
+    for (int index = 0; index < size; index++) {
+      final RendererListEntry elementAt = model.getElementAt(index);
+      if (elementAt.getId().equals(id)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public void remove(final String id) {
+    final int size = model.getSize();
+    for (int index = 0; index < size; index++) {
+      final RendererListEntry elementAt = model.getElementAt(index);
+      if (elementAt.getId().equals(id)) {
+        model.removeElementAt(index);
+      }
+    }
+  }
 }

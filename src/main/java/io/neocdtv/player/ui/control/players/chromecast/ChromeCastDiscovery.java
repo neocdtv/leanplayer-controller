@@ -3,6 +3,7 @@ package io.neocdtv.player.ui.control.players.chromecast;
 import io.neocdtv.player.ui.control.NetworkUtil;
 import io.neocdtv.player.ui.discovery.RendererDiscovery;
 import io.neocdtv.player.ui.discovery.RendererDiscoveryEvent;
+import io.neocdtv.player.ui.discovery.RendererLostEvent;
 import su.litvak.chromecast.api.v2.ChromeCast;
 import su.litvak.chromecast.api.v2.ChromeCasts;
 import su.litvak.chromecast.api.v2.ChromeCastsListener;
@@ -11,6 +12,7 @@ import javax.enterprise.event.Event;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +32,10 @@ public class ChromeCastDiscovery implements RendererDiscovery {
   private NetworkUtil networkUtil;
 
   @Inject
-  private Event<RendererDiscoveryEvent> rendererDiscoveryEventEvent;
+  private Event<RendererDiscoveryEvent> rendererDiscoveryEvent;
+
+  @Inject
+  private Event<RendererLostEvent> rendererLostEvent;
 
   @Override
   public void start() {
@@ -47,8 +52,8 @@ public class ChromeCastDiscovery implements RendererDiscovery {
     final String name = MANUAL_NAME;
     final ChromeCastPlayer player = createPlayer();
     player.start(ip);
-    RendererDiscoveryEvent manualDiscoveryEvent = new RendererDiscoveryEvent(name, player);
-    rendererDiscoveryEventEvent.fire(manualDiscoveryEvent);
+    RendererDiscoveryEvent manualDiscoveryEvent = new RendererDiscoveryEvent(name, UUID.randomUUID().toString() ,player);
+    rendererDiscoveryEvent.fire(manualDiscoveryEvent);
   }
 
   private void autoConfiguration() {
@@ -58,15 +63,15 @@ public class ChromeCastDiscovery implements RendererDiscovery {
         @Override
         public void newChromeCastDiscovered(ChromeCast chromeCast) {
           final ChromeCastPlayer player = createPlayer();
-          LOGGER.info("Device discovered");
+          LOGGER.info("Device discovered: " + chromeCast.getName());
           player.start(chromeCast);
-          RendererDiscoveryEvent manualDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getName(), player);
-          rendererDiscoveryEventEvent.fire(manualDiscoveryEvent);
+          RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getName(), chromeCast.getTitle(), player);
+          rendererDiscoveryEvent.fire(autoDiscoveryEvent);
         }
         @Override
         public void chromeCastRemoved(ChromeCast chromeCast) {
-          // TODO: implement removing from renderer list
-          LOGGER.info("Device lost");
+          LOGGER.info("Device lost: "+ chromeCast.getName());
+          rendererLostEvent.fire(RendererLostEvent.create(chromeCast.getName()));
         }
       });
       networkUtil.findIpv4AddressForActiveInterfaces().stream().forEach(address -> {

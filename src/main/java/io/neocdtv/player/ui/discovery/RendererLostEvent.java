@@ -8,6 +8,17 @@ package io.neocdtv.player.ui.discovery;
  */
 public class RendererLostEvent {
 
-    // TODO: implement and use
-    // how to identifiy player to be remove from renderer list? ip+port? think about some sort of id
+  private final String id;
+
+  private RendererLostEvent(final String id) {
+    this.id = id;
+  }
+
+  public static RendererLostEvent create(final String id) {
+    return new RendererLostEvent(id);
+  }
+
+  public String getId() {
+    return id;
+  }
 }

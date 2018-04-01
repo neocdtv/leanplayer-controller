@@ -8,12 +8,14 @@ import su.litvak.chromecast.api.v2.ChromeCastConnectionEvent;
 import su.litvak.chromecast.api.v2.ChromeCastConnectionEventListener;
 import su.litvak.chromecast.api.v2.ChromeCastSpontaneousEvent;
 import su.litvak.chromecast.api.v2.ChromeCastSpontaneousEventListener;
+import su.litvak.chromecast.api.v2.Media;
 import su.litvak.chromecast.api.v2.MediaStatus;
 import su.litvak.chromecast.api.v2.Status;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,6 +31,7 @@ public class ChromeCastPlayer implements Player {
   private static final String DEFAULT_MEDIA_RENDERER_APP_ID = "CC1AD845";
   private ChromeCast chromeCast;
   private MediaStatus lastMediaStatus;
+  private Application application;
 
   @Inject
   private Event<TrackEndedEvent> trackEndedEventEvent;
@@ -40,25 +43,19 @@ public class ChromeCastPlayer implements Player {
 
   public void start(final ChromeCast chromeCast) {
     this.chromeCast = chromeCast;
-    Application app = null;
 
-    try {
-      if (chromeCast.isAppAvailable(DEFAULT_MEDIA_RENDERER_APP_ID) && !chromeCast.getStatus().isAppRunning(DEFAULT_MEDIA_RENDERER_APP_ID)) {
-        app = chromeCast.launchApp(DEFAULT_MEDIA_RENDERER_APP_ID);
+    connect(true);
 
-      }
-    } catch (IOException e) {
-      handleIOException(e);
-    }
     //TODO: chromeCast.setVolumeByIncrement(0.01f);
-    LOGGER.info("autoReconnect: " + chromeCast.isAutoReconnect());
     chromeCast.registerListener(new ChromeCastSpontaneousEventListener() {
       public void spontaneousEventReceived(ChromeCastSpontaneousEvent chromeCastSpontaneousEvent) {
         LOGGER.info("Data: " + chromeCastSpontaneousEvent.getData() + ", \nType: " + chromeCastSpontaneousEvent.getType());
-
         if (chromeCastSpontaneousEvent.getType().equals(ChromeCastSpontaneousEvent.SpontaneousEventType.MEDIA_STATUS)) {
           lastMediaStatus = chromeCastSpontaneousEvent.getData(MediaStatus.class);
-          if (lastMediaStatus.idleReason.equals(MediaStatus.IdleReason.FINISHED)) {
+        }
+        if (chromeCastSpontaneousEvent.getType().equals(ChromeCastSpontaneousEvent.SpontaneousEventType.STATUS)) {
+          final Status status = chromeCastSpontaneousEvent.getData(Status.class);
+          if (lastMediaStatus.idleReason.equals(MediaStatus.IdleReason.FINISHED) && status.applications.get(0).statusText.equals("Ready To Cast")) {
             trackEndedEventEvent.fire(new TrackEndedEvent());
           }
         }
@@ -67,22 +64,29 @@ public class ChromeCastPlayer implements Player {
     chromeCast.registerConnectionListener(new ChromeCastConnectionEventListener() {
       @Override
       public void connectionEventReceived(ChromeCastConnectionEvent chromeCastConnectionEvent) {
-        LOGGER.info("isConnected: " + chromeCastConnectionEvent.isConnected());
-        if (!chromeCast.isConnected()) {
-          start(chromeCast);
-        }
+        LOGGER.info("is connected: " + chromeCastConnectionEvent.isConnected());
       }
     });
   }
 
+  private void connect(final boolean force) {
+    LOGGER.info("Trying to start APP: " + DEFAULT_MEDIA_RENDERER_APP_ID);
+    try {
+      if (force || chromeCast.isAppAvailable(DEFAULT_MEDIA_RENDERER_APP_ID) && !chromeCast.getStatus().isAppRunning(DEFAULT_MEDIA_RENDERER_APP_ID)) {
+        application = chromeCast.launchApp(DEFAULT_MEDIA_RENDERER_APP_ID);
+      }
+    } catch (IOException e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      connect(force);
+    }
+  }
 
   public void play(String url) {
     try {
       if (chromeCast.isConnected()) {
         chromeCast.disconnect();
+        chromeCast.connect();
       }
-
-      chromeCast.connect();
       chromeCast.load(url);
       chromeCast.play();
     } catch (Throwable e) {

@@ -1,12 +1,14 @@
 package io.neocdtv.player.ui.control;
 
 import io.neocdtv.player.ui.discovery.RendererDiscoveryEvent;
+import io.neocdtv.player.ui.discovery.RendererLostEvent;
 import io.neocdtv.player.ui.model.RendererList;
 import io.neocdtv.player.ui.model.RendererListEntry;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
+import javax.swing.*;
 
 /**
  * RendererListController.
@@ -21,6 +23,14 @@ public class RendererListController {
   private RendererList rendererList;
 
   public void onRendererDiscovered(@Observes RendererDiscoveryEvent rendererDiscoveryEvent) {
-    rendererList.getModel().addElement(RendererListEntry.fromEvent(rendererDiscoveryEvent));
+    if (!rendererList.contains(rendererDiscoveryEvent.getId())) {
+      rendererList.getModel().addElement(RendererListEntry.fromEvent(rendererDiscoveryEvent));
+    }
+  }
+
+  public void onRendererLost(@Observes RendererLostEvent rendererLostEvent) {
+    if (rendererList.contains(rendererLostEvent.getId())) {
+      rendererList.remove(rendererLostEvent.getId());
+    }
   }
 }

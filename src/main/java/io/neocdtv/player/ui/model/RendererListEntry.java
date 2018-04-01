@@ -16,11 +16,21 @@ import io.neocdtv.player.ui.discovery.RendererDiscoveryEvent;
  */
 public class RendererListEntry {
   private final String name;
+  private final String id;
   private final Player player;
 
-  private RendererListEntry(final String name, final Player player) {
+  private RendererListEntry(final String name, final String id, final Player player) {
     this.name = name;
+    this.id = id;
     this.player = player;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getId() {
+    return id;
   }
 
   public Player getPlayer() {
@@ -32,11 +42,11 @@ public class RendererListEntry {
     return name;
   }
 
-  public static RendererListEntry create(final String name, final Player player) {
-    return new RendererListEntry(name, player);
+  public static RendererListEntry create(final String name, final String id, final Player player) {
+    return new RendererListEntry(name, id, player);
   }
 
   public static RendererListEntry fromEvent(final RendererDiscoveryEvent rendererDiscoveryEvent) {
-    return create(rendererDiscoveryEvent.getName(), rendererDiscoveryEvent.getPlayer());
+    return create(rendererDiscoveryEvent.getName(), rendererDiscoveryEvent.getId(), rendererDiscoveryEvent.getPlayer());
   }
 }
