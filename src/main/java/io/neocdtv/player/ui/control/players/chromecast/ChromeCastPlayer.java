@@ -50,7 +50,7 @@ public class ChromeCastPlayer implements Player {
     } catch (IOException e) {
       handleIOException(e);
     }
-    //TODO chromeCast.setVolumeByIncrement(0.01f);
+    //TODO: chromeCast.setVolumeByIncrement(0.01f);
     LOGGER.info("autoReconnect: " + chromeCast.isAutoReconnect());
     chromeCast.registerListener(new ChromeCastSpontaneousEventListener() {
       public void spontaneousEventReceived(ChromeCastSpontaneousEvent chromeCastSpontaneousEvent) {
@@ -69,7 +69,7 @@ public class ChromeCastPlayer implements Player {
       public void connectionEventReceived(ChromeCastConnectionEvent chromeCastConnectionEvent) {
         LOGGER.info("isConnected: " + chromeCastConnectionEvent.isConnected());
         if (!chromeCast.isConnected()) {
-          chromeCast.isConnected();
+          start(chromeCast);
         }
       }
     });
