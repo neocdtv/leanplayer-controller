@@ -2,20 +2,17 @@ package io.neocdtv.player.ui.control.players.chromecast;
 
 import io.neocdtv.player.ui.control.Player;
 import io.neocdtv.player.ui.control.TrackEndedEvent;
-import su.litvak.chromecast.api.v2.Application;
 import su.litvak.chromecast.api.v2.ChromeCast;
 import su.litvak.chromecast.api.v2.ChromeCastConnectionEvent;
 import su.litvak.chromecast.api.v2.ChromeCastConnectionEventListener;
 import su.litvak.chromecast.api.v2.ChromeCastSpontaneousEvent;
 import su.litvak.chromecast.api.v2.ChromeCastSpontaneousEventListener;
-import su.litvak.chromecast.api.v2.Media;
 import su.litvak.chromecast.api.v2.MediaStatus;
 import su.litvak.chromecast.api.v2.Status;
 
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,7 +28,7 @@ public class ChromeCastPlayer implements Player {
   private static final String DEFAULT_MEDIA_RENDERER_APP_ID = "CC1AD845";
   private ChromeCast chromeCast;
   private MediaStatus lastMediaStatus;
-  private Application application;
+  private boolean isDefaultMediaRendererRunning = false;
 
   @Inject
   private Event<TrackEndedEvent> trackEndedEventEvent;
@@ -43,10 +40,6 @@ public class ChromeCastPlayer implements Player {
 
   public void start(final ChromeCast chromeCast) {
     this.chromeCast = chromeCast;
-
-    connect(true);
-
-    //TODO: chromeCast.setVolumeByIncrement(0.01f);
     chromeCast.registerListener(new ChromeCastSpontaneousEventListener() {
       public void spontaneousEventReceived(ChromeCastSpontaneousEvent chromeCastSpontaneousEvent) {
         LOGGER.info("Data: " + chromeCastSpontaneousEvent.getData() + ", \nType: " + chromeCastSpontaneousEvent.getType());
@@ -69,19 +62,21 @@ public class ChromeCastPlayer implements Player {
     });
   }
 
-  private void connect(final boolean force) {
-    LOGGER.info("Trying to start APP: " + DEFAULT_MEDIA_RENDERER_APP_ID);
-    try {
-      if (force || chromeCast.isAppAvailable(DEFAULT_MEDIA_RENDERER_APP_ID) && !chromeCast.getStatus().isAppRunning(DEFAULT_MEDIA_RENDERER_APP_ID)) {
-        application = chromeCast.launchApp(DEFAULT_MEDIA_RENDERER_APP_ID);
+  private void ensureDefaultMediaRendererIsRunning() {
+    if (!isDefaultMediaRendererRunning) {
+      try {
+        if (chromeCast.isAppAvailable(DEFAULT_MEDIA_RENDERER_APP_ID) && !chromeCast.getStatus().isAppRunning(DEFAULT_MEDIA_RENDERER_APP_ID)) {
+          chromeCast.launchApp(DEFAULT_MEDIA_RENDERER_APP_ID);
+        }
+        isDefaultMediaRendererRunning = true;
+      } catch (IOException e) {
+        LOGGER.log(Level.SEVERE, e.getMessage(), e);
       }
-    } catch (IOException e) {
-      LOGGER.log(Level.SEVERE, e.getMessage(), e);
-      connect(force);
     }
   }
 
   public void play(String url) {
+    ensureDefaultMediaRendererIsRunning();
     try {
       if (chromeCast.isConnected()) {
         chromeCast.disconnect();
@@ -95,6 +90,7 @@ public class ChromeCastPlayer implements Player {
   }
 
   public void pause() {
+    ensureDefaultMediaRendererIsRunning();
     try {
       chromeCast.pause();
     } catch (IOException e) {
@@ -103,6 +99,7 @@ public class ChromeCastPlayer implements Player {
   }
 
   public void volumeUp() {
+    ensureDefaultMediaRendererIsRunning();
     try {
       final Status status = chromeCast.getStatus();
       chromeCast.setVolume(status.volume.level + 0.01f);
@@ -112,6 +109,7 @@ public class ChromeCastPlayer implements Player {
   }
 
   public void volumeDown() {
+    ensureDefaultMediaRendererIsRunning();
     try {
       final Status status = chromeCast.getStatus();
       chromeCast.setVolume(status.volume.level - 0.01f);
