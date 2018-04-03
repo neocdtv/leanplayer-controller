@@ -71,7 +71,8 @@ public class ChromeCastDiscovery implements RendererDiscovery {
         @Override
         public void chromeCastRemoved(ChromeCast chromeCast) {
           LOGGER.info("Device lost: "+ chromeCast.getName());
-          // chromeCastRemoved is called even the device seems to work correctly
+          // chromeCastRemoved is called even the device seems to work correctly; idea try open socket to device and if not possible throw event;
+          // or maybe open every 1,2 or 3s a socket to check if device works and if not throw event
           // rendererLostEvent.fire(RendererLostEvent.create(chromeCast.getName()));
         }
       });
