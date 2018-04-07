@@ -70,21 +70,15 @@ public class ChromeCastPlayer implements Player {
   // TODO: still work in progress on trying to improve stability
   private void ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected() throws IOException, GeneralSecurityException {
     if (chromeCast.isConnected()) {
-      LOGGER.info("reconnect chromecast...");
+      LOGGER.info("reconnecting...");
       chromeCast.disconnect();
       chromeCast.connect();
     }
-    LOGGER.info("isAppInitialized: "+ isAppInitialized + ", chromeCast.isConnected(): " + chromeCast.isConnected());
-    if (!isAppInitialized || !chromeCast.isConnected()) {
+    LOGGER.info("isAppInitialized: " + isAppInitialized);
+    if (!isAppInitialized) {
       try {
-        if (chromeCast.isAppAvailable(DEFAULT_MEDIA_RENDERER_APP_ID)) {
-          if (isAppInitialized && !chromeCast.getStatus().isAppRunning(DEFAULT_MEDIA_RENDERER_APP_ID)) {
-            LOGGER.info("stopping APP...");
-            chromeCast.stopApp();
-          }
-          LOGGER.info("starting APP...");
-          chromeCast.launchApp(DEFAULT_MEDIA_RENDERER_APP_ID);
-        }
+        LOGGER.info("starting APP " + DEFAULT_MEDIA_RENDERER_APP_ID);
+        chromeCast.launchApp(DEFAULT_MEDIA_RENDERER_APP_ID);
         isAppInitialized = true;
       } catch (IOException e) {
         LOGGER.log(Level.SEVERE, e.getMessage(), e);
@@ -92,6 +86,11 @@ public class ChromeCastPlayer implements Player {
     }
   }
 
+  /* TODO: stability: catch all occuring exceptions in a separate block and try to handle them accordingly
+    - NullPointer means ChromeCast (API) is broken, so it needs to be initialized again
+    - ConnectionExceptions, check if the socket is open and if yes retry - what connecting, initializing the app again
+    - SSLException/Security
+  */
   public void play(String url) {
     try {
       ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected();
@@ -101,8 +100,14 @@ public class ChromeCastPlayer implements Player {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
       isAppInitialized = false;
       play(url);
-    } catch (Throwable e) {
-      handleIOException(e);
+    } catch (GeneralSecurityException e) {
+      // TODO: implement specific handling
+      handleExceptions(e);
+    } catch (NullPointerException e) {
+      // TODO: implement specific handling
+      handleExceptions(e);
+    } catch (IOException e) {
+      handleExceptions(e);
     }
   }
 
@@ -111,7 +116,7 @@ public class ChromeCastPlayer implements Player {
       ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected();
       chromeCast.pause();
     } catch (Throwable e) {
-      handleIOException(e);
+      handleExceptions(e);
     }
   }
 
@@ -121,7 +126,7 @@ public class ChromeCastPlayer implements Player {
       final Status status = chromeCast.getStatus();
       chromeCast.setVolume(status.volume.level + 0.01f);
     } catch (Throwable e) {
-      handleIOException(e);
+      handleExceptions(e);
     }
   }
 
@@ -131,11 +136,11 @@ public class ChromeCastPlayer implements Player {
       final Status status = chromeCast.getStatus();
       chromeCast.setVolume(status.volume.level - 0.01f);
     } catch (Throwable e) {
-      handleIOException(e);
+      handleExceptions(e);
     }
   }
 
-  private void handleIOException(Throwable e) {
+  private void handleExceptions(Throwable e) {
     LOGGER.log(Level.INFO, e.getMessage(), e);
     throw new RuntimeException(e);
   }
