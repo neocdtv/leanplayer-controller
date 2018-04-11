@@ -3,6 +3,7 @@ package io.neocdtv.player.ui.ui;
 import io.neocdtv.player.ui.control.worker.Next;
 import io.neocdtv.player.ui.control.worker.Pause;
 import io.neocdtv.player.ui.control.worker.Play;
+import io.neocdtv.player.ui.control.worker.SavePlaylist;
 import io.neocdtv.player.ui.control.worker.VolumeDown;
 import io.neocdtv.player.ui.control.worker.VolumeUp;
 
@@ -39,6 +40,9 @@ public class ControlButtonsUI {
   @Inject
   private VolumeUp volumeUp;
 
+  @Inject
+  private SavePlaylist savePlaylist;
+
 
   JPanel buildButtonPanel() {
     JPanel buttonPanel = new JPanel(new GridLayout(1, 6));
@@ -47,6 +51,7 @@ public class ControlButtonsUI {
     buttonPanel.add(buildNextButton());
     buttonPanel.add(buildVolumeDownButton());
     buttonPanel.add(buildVolumeUpButton());
+    buttonPanel.add(buildSavePlaylistButton());
     return buttonPanel;
   }
 
@@ -105,6 +110,18 @@ public class ControlButtonsUI {
       public void actionPerformed(ActionEvent actionEvent) {
         LOGGER.log(Level.INFO, "actionPerformed");
         volumeUp.execute();
+      }
+    });
+    return button;
+  }
+
+  public JButton buildSavePlaylistButton() {
+    JButton button = new JButton("Save");
+    button.addActionListener(new ActionListener() {
+      @Override
+      public void actionPerformed(ActionEvent actionEvent) {
+        LOGGER.log(Level.INFO, "actionPerformed");
+        savePlaylist.execute();
       }
     });
     return button;
