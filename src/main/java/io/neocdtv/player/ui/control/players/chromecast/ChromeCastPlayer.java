@@ -29,6 +29,7 @@ public class ChromeCastPlayer implements Player {
   private final static Logger LOGGER = Logger.getLogger(ChromeCastPlayer.class.getName());
   private static final String DEFAULT_MEDIA_RENDERER_APP_ID = "CC1AD845";
   private static final String STATUS_TEXT_READY_TO_CAST = "Ready To Cast";
+  public static final float VOLUME_INCREMENT = 0.01f;
   private ChromeCast chromeCast;
   private MediaStatus lastMediaStatus;
   private Status lastStatus;
@@ -51,7 +52,7 @@ public class ChromeCastPlayer implements Player {
           lastMediaStatus = chromeCastSpontaneousEvent.getData(MediaStatus.class);
         } else if (chromeCastSpontaneousEvent.getType().equals(ChromeCastSpontaneousEvent.SpontaneousEventType.STATUS)) {
           lastStatus = chromeCastSpontaneousEvent.getData(Status.class);
-          if (lastMediaStatus.idleReason.equals(MediaStatus.IdleReason.FINISHED) && lastStatus.applications.get(0).statusText.equals(STATUS_TEXT_READY_TO_CAST)) {
+          if (lastStatus.applications.get(0).statusText.equals(STATUS_TEXT_READY_TO_CAST)) {
             trackEndedEventEvent.fire(new TrackEndedEvent());
           }
         }
@@ -68,12 +69,7 @@ public class ChromeCastPlayer implements Player {
 
 
   // TODO: still work in progress on trying to improve stability
-  private void ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected() throws IOException, GeneralSecurityException {
-    if (chromeCast.isConnected()) {
-      LOGGER.info("reconnecting...");
-      chromeCast.disconnect();
-      chromeCast.connect();
-    }
+  private void ensureDefaultMediaRendererIsRunning() throws IOException, GeneralSecurityException {
     LOGGER.info("isAppInitialized: " + isAppInitialized);
     if (!isAppInitialized) {
       try {
@@ -93,7 +89,8 @@ public class ChromeCastPlayer implements Player {
   */
   public void play(String url) {
     try {
-      ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected();
+      ensureDefaultMediaRendererIsRunning();
+      reconnect();
       chromeCast.load(url);
       chromeCast.play();
     } catch (ChromeCastException e) {
@@ -106,14 +103,22 @@ public class ChromeCastPlayer implements Player {
     } catch (NullPointerException e) {
       // TODO: implement specific handling
       handleExceptions(e);
-    } catch (IOException e) {
+    } catch (Throwable e) {
       handleExceptions(e);
+    }
+  }
+
+  private void reconnect() throws IOException, GeneralSecurityException {
+    if (chromeCast.isConnected()) {
+      LOGGER.info("reconnecting...");
+      chromeCast.disconnect();
+      chromeCast.connect();
     }
   }
 
   public void pause() {
     try {
-      ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected();
+      ensureDefaultMediaRendererIsRunning();
       chromeCast.pause();
     } catch (Throwable e) {
       handleExceptions(e);
@@ -122,9 +127,9 @@ public class ChromeCastPlayer implements Player {
 
   public void volumeUp() {
     try {
-      ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected();
+      ensureDefaultMediaRendererIsRunning();
       final Status status = chromeCast.getStatus();
-      chromeCast.setVolume(status.volume.level + 0.01f);
+      chromeCast.setVolume(status.volume.level + VOLUME_INCREMENT);
     } catch (Throwable e) {
       handleExceptions(e);
     }
@@ -132,9 +137,9 @@ public class ChromeCastPlayer implements Player {
 
   public void volumeDown() {
     try {
-      ensureDefaultMediaRendererIsRunningAndChromeCastIsConnected();
+      ensureDefaultMediaRendererIsRunning();
       final Status status = chromeCast.getStatus();
-      chromeCast.setVolume(status.volume.level - 0.01f);
+      chromeCast.setVolume(status.volume.level - VOLUME_INCREMENT);
     } catch (Throwable e) {
       handleExceptions(e);
     }

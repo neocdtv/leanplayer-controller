@@ -50,6 +50,10 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
@@ -94,16 +98,24 @@ public class PlaylistTransferHandler extends TransferHandler {
     List<File> data;
     try {
       data = (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor);
-      for (File file : data) {
-        if (file.isDirectory()) {
-          final boolean recursive = true;
-          final String[] fileExtensionFilter = null;
-          final List<File> listFiles = Arrays.asList(FileUtils.convertFileCollectionToFileArray(FileUtils.listFiles(file, fileExtensionFilter, recursive)));
-          for (File o : listFiles) {
-            listModel.addElement(buildEntry(o));
+      if (data.size() == 1 && isPlaylist(data.get(0).getName())) {
+        final File file = data.get(0);
+        final List<String> pathsFromPlaylist = Files.readAllLines(Paths.get(file.toURI()));
+        for (String pathFromPlaylist: pathsFromPlaylist) {
+          listModel.addElement(buildEntry(new File(pathFromPlaylist)));
+        }
+      } else {
+        for (File file : data) {
+          if (file.isDirectory()) {
+            final boolean recursive = true;
+            final String[] fileExtensionFilter = null;
+            final List<File> listFiles = Arrays.asList(FileUtils.convertFileCollectionToFileArray(FileUtils.listFiles(file, fileExtensionFilter, recursive)));
+            for (File o : listFiles) {
+              listModel.addElement(buildEntry(o));
+            }
+          } else {
+            listModel.addElement(buildEntry(file));
           }
-        } else {
-          listModel.addElement(buildEntry(file));
         }
       }
     } catch (UnsupportedFlavorException | IOException ex) {
@@ -111,6 +123,14 @@ public class PlaylistTransferHandler extends TransferHandler {
       return false;
     }
     return true;
+  }
+
+  private boolean isPlaylist(final String name) {
+    final String[] fileNameSplit = name.split("\\.");
+    if (fileNameSplit.length == 2) {
+      return fileNameSplit[1].equals("pls");
+    }
+    return false;
   }
 
   private PlaylistEntry buildEntry(final File file) {
