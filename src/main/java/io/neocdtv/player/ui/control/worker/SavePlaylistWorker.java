@@ -31,7 +31,7 @@ import java.util.logging.Logger;
 public class SavePlaylistWorker extends SwingWorker<Void, Void> {
 
   private final static Logger LOGGER = Logger.getLogger(SavePlaylistWorker.class.getName());
-  private final static String PATH_TO_SAVE_PLS = "/home/xix/Schreibtisch";
+  public static final String LINUX_ENV_HOME_DIR = "HOME";
 
   private Playlist playlist;
 
@@ -44,7 +44,7 @@ public class SavePlaylistWorker extends SwingWorker<Void, Void> {
       LOGGER.info("Entry.path: " + playlistEntry.getPath());
       playlistBuffer.append(playlistEntry.getPath() + "\n");
     }
-    final File file = new File(PATH_TO_SAVE_PLS + "/playlist" + System.currentTimeMillis() + ".pls");
+    final File file = new File(System.getenv(LINUX_ENV_HOME_DIR) + "/playlist" + System.currentTimeMillis() + ".pls");
     try {
       java.nio.file.Files.write(
           Paths.get(file.toURI()),

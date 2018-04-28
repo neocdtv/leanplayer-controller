@@ -62,7 +62,6 @@ public class ChromeCastPlayer implements Player {
       @Override
       public void connectionEventReceived(ChromeCastConnectionEvent chromeCastConnectionEvent) {
         LOGGER.info("is connected: " + chromeCastConnectionEvent.isConnected());
-        //isAppInitialized = chromeCastConnectionEvent.isConnected();
       }
     });
   }

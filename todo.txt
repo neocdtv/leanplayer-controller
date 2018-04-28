@@ -1,6 +1,5 @@
 Prio:
-- improve chromecast stability
-- move project from generic-controller to leanplayer-controller
+- improve chromecast stability - try pooling on media_status and status, since events are not working always correct
 
 product backlog
 - check todos
@@ -9,25 +8,21 @@ product backlog
 - create releases on github
 - add tests - how to test the gui
 - checkout smb support on mplayer (ok) and omxplayer (todo), chromecast (not ok)
-- smb how to?
-- improve controller reaction to chromecasts ChromeCastConnectionEvent.isConnected == false,
-    try to reconnect
-    check if something is playing and check if the registered event handles are still in place/registered
+- smb how to - no streaming from desktop but direct from smb-server
 - implement volume up/down - ideally use a slider
 - show errors in a dialog to the user??
 - refactor packages
+
 - how to react on player change in renderer list? stop playing on the current device and start on the other device?
-- react on websocket connection error - leanplayer
+- react on websocket connection error - leanplayer-renderer
 - add seeking
     try protocols supported by omxplayer and mplayer
     is there a possibility to have http with seeking for streamingservice?
-    gui
-- check/fix support of sending pasted urls
 
+- improve logging, use level- check out how they work exaclty in java.util.logging
 
-- improve logging, use level
-- check out
+- New Protocol: add support for dlna
+    use cling to implement dlna-renderer for mplayer and omxplayer
+    use cling to implement dlna-controller
 
-- NEW PLAYER: add support for dlna
-- improve logging
-- add device removal
+- add stable device removal

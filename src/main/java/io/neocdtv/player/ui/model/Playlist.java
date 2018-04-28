@@ -23,23 +23,12 @@ public class Playlist extends DefaultListModel<PlaylistEntry> {
   @Inject
   private PlaylistSelection playlistSelection;
 
-  public Playlist() {
-    justForTests();
-  }
-
-  private void justForTests() {
-    add(0, PlaylistEntry.create("272.mp3", UrlBuilder.build("/music/272.mp3")));
-    add(1, PlaylistEntry.create("273.mp3", UrlBuilder.build("/music/273.mp3")));
-    add(2, PlaylistEntry.create("1.mp4", UrlBuilder.build("/music/1.mp4")));
-  }
-
   public PlaylistEntry getSelectedPlaylistEntry() {
     LOGGER.log(Level.INFO, "getting track url for current playlist entry...");
-    PlaylistEntry selectedPlaylistEntry = null;
     final int selectedIndex = playlistSelection.getMinSelectionIndex();
-    LOGGER.log(Level.INFO, "selected index {0} ", selectedIndex);
-    selectedPlaylistEntry = get(selectedIndex);
-    LOGGER.log(Level.INFO, "selected playlist track {0}", selectedPlaylistEntry.getPath());
+    LOGGER.log(Level.FINE, "selected index {0} ", selectedIndex);
+    PlaylistEntry selectedPlaylistEntry = selectedPlaylistEntry = get(selectedIndex);
+    LOGGER.log(Level.FINE, "selected playlist track {0}", selectedPlaylistEntry.getPath());
     return selectedPlaylistEntry;
   }
 
