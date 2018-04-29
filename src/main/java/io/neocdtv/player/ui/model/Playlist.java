@@ -22,41 +22,66 @@ public class Playlist extends DefaultListModel<PlaylistEntry> {
   @Inject
   private PlaylistSelection playlistSelection;
 
-  public PlaylistEntry getSelectedPlaylistEntry() {
+  public PlaylistEntry getCurrentPlaylistEntry() {
     LOGGER.log(Level.INFO, "getting track url for current playlist entry...");
     if (getSize() > 0) {
-      if (playlistSelection.getCurrentPlayingUUID() == null) {
-        final PlaylistEntry playlistEntry = get(0);
-        playlistSelection.setCurrentPlayingUuid(playlistEntry.getUuid());
+      if (isPlaylistEntrySelected()) {
+        final int selectedIndex = playlistSelection.getMinSelectionIndex();
+        PlaylistEntry currentPlaylistEntry = get(selectedIndex);
+        playlistSelection.setCurrentPlayingUuid(currentPlaylistEntry.getUuid());
+        return currentPlaylistEntry;
+      } else {
+        return initCurrentPlayingUuidIfNotAvailable();
       }
-      final int currentPlayingIndex = findEntryByUuid(playlistSelection.getCurrentPlayingUUID());
-      playlistSelection.setSelectionInterval(currentPlayingIndex, currentPlayingIndex);
-      LOGGER.log(Level.FINE, "selected index {0} ", currentPlayingIndex);
-      PlaylistEntry selectedPlaylistEntry = selectedPlaylistEntry = get(currentPlayingIndex);
-      LOGGER.log(Level.FINE, "selected playlist track {0}", selectedPlaylistEntry.getPath());
-      return selectedPlaylistEntry;
     }
-    return null;
+    throw new RuntimeException("Cannot determine current playlist entry!");
   }
 
+  private boolean isPlaylistEntrySelected() {
+    return playlistSelection.getMinSelectionIndex() >= 0;
+  }
+
+  private PlaylistEntry initCurrentPlayingUuidIfNotAvailable() {
+    PlaylistEntry playlistEntry = null;
+    if (playlistSelection.getCurrentPlayingUUID() == null) {
+      final int firstPlaylistEntry = 0;
+      playlistEntry = get(firstPlaylistEntry);
+      playlistSelection.setCurrentPlayingUuid(playlistEntry.getUuid());
+      playlistSelection.setSelectionInterval(firstPlaylistEntry, firstPlaylistEntry);
+    }
+    return playlistEntry;
+  }
+
+  /*
+    Calculates next playlist entry. The starting point for the calculation is the current playing entry
+    , which preserved in playlistSelection.getCurrentPlayingUUID.
+   */
   public PlaylistEntry getNextPlaylistEntry() {
     LOGGER.log(Level.INFO, "getting track url for next playlist entry...");
-    PlaylistEntry nextPlaylistEntry = null;
-    int currentPlayingIndex = findEntryByUuid(playlistSelection.getCurrentPlayingUUID());
-    if (getSize() > 0 && currentPlayingIndex >= 0) {
+
+    if (getSize() > 0) {
+      final PlaylistEntry newlyInitialized = initCurrentPlayingUuidIfNotAvailable();
+      if (newlyInitialized != null) {
+        return newlyInitialized;
+      }
+
+      int currentPlayingIndex = findEntryIndexByUuid(playlistSelection.getCurrentPlayingUUID());
       currentPlayingIndex++;
       // no next entry, so start from the beginning
       if (currentPlayingIndex >= getSize()) {
         currentPlayingIndex = 0;
       }
       playlistSelection.setSelectionInterval(currentPlayingIndex, currentPlayingIndex);
-      nextPlaylistEntry = get(currentPlayingIndex);
+      final PlaylistEntry nextPlaylistEntry = get(currentPlayingIndex);
       playlistSelection.setCurrentPlayingUuid(nextPlaylistEntry.getUuid());
+      LOGGER.log(Level.INFO, "next playlist track {0}", nextPlaylistEntry.getPath());
+
+      return nextPlaylistEntry;
     }
-    return nextPlaylistEntry;
+    throw new RuntimeException("Cannot determine next playlist entry!");
   }
 
-  public int findEntryByUuid(final UUID uuid) {
+  public int findEntryIndexByUuid(final UUID uuid) {
     for (int i = 0; i < getSize(); i++) {
       final PlaylistEntry playlistEntry = get(i);
       if (playlistEntry.getUuid().equals(uuid)) {
@@ -64,5 +89,19 @@ public class Playlist extends DefaultListModel<PlaylistEntry> {
       }
     }
     throw new RuntimeException("Couldn't find playlist entry with UUID: " + uuid.toString());
+  }
+
+  @Override
+  public boolean removeElement(final Object object) {
+    final PlaylistEntry playlistEntry = (PlaylistEntry) object;
+    if (playlistEntry.getUuid().equals(playlistSelection.getCurrentPlayingUUID())) {
+      // TODO: define an algorithm, which will selected the next best entry.
+      // The current solution will select first entry from the playlist.
+      playlistSelection.setCurrentPlayingUuid(null);
+    }
+
+
+    final boolean removed = super.removeElement(object);
+    return removed;
   }
 }
