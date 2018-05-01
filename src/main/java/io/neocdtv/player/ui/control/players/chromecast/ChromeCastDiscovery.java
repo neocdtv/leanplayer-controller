@@ -1,6 +1,6 @@
 package io.neocdtv.player.ui.control.players.chromecast;
 
-import io.neocdtv.player.ui.control.NetworkUtil;
+import io.neocdtv.commons.network.NetworkUtil;
 import io.neocdtv.player.ui.discovery.RendererDiscovery;
 import io.neocdtv.player.ui.discovery.RendererDiscoveryEvent;
 import io.neocdtv.player.ui.discovery.RendererLostEvent;
