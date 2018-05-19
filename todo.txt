@@ -1,4 +1,7 @@
 Prio:
+- fix localhost interface support for streaming service - use Network util
+
+Prio:
 - improve chromecast stability - try pooling on media_status and status, since events are not working always correct
 
 product backlog
