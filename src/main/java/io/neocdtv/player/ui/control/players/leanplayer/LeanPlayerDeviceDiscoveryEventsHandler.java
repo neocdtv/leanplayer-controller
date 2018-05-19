@@ -43,7 +43,7 @@ public class LeanPlayerDeviceDiscoveryEventsHandler implements DeviceDiscoveryEv
       final LeanPlayerEventsHandler leanPlayerEventsHandler = new LeanPlayerEventsHandler();
       leanPlayerEventsHandler.setEventsLocation(eventsLocation);
       leanPlayerEventsHandler.setTrackEndedEventEvent(trackEndedEventEvent);
-      leanPlayerEventsHandler.connect();
+      leanPlayerEventsHandler.setupEventsConnection();
 
       rendererDiscoveryEventEvent.fire(new RendererDiscoveryEvent(deviceName, "dummyId", leanPlayer));
     }

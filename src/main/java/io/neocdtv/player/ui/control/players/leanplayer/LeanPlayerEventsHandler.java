@@ -29,7 +29,7 @@ public class LeanPlayerEventsHandler {
   private String eventsLocation;
   private Event<TrackEndedEvent> trackEndedEventEvent;
 
-  public void connect() {
+  public void setupEventsConnection() {
     final ClientEndpointConfig cec = ClientEndpointConfig.Builder.create().build();
     ClientManager client = ClientManager.createClient();
     try {

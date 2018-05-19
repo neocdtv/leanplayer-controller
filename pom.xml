@@ -73,7 +73,7 @@
     <dependency>
       <groupId>su.litvak.chromecast</groupId>
       <artifactId>api-v2</artifactId>
-      <version>0.10.3-SNAPSHOT</version>
+      <version>0.10.4-SNAPSHOT</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/junit/junit -->
