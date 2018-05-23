@@ -62,14 +62,19 @@ public class ChromeCastDiscovery implements RendererDiscovery {
     LOGGER.info("Auto Device Configuration");
     ChromeCasts.registerListener(new ChromeCastsListener() {
       @Override
-      public void newChromeCastDiscovered(ChromeCast chromeCast) throws UnknownHostException {
-        final ChromeCastPlayer player = createPlayer();
-        LOGGER.info("Device discovered: " + chromeCast.getName());
-        // TODO: test if InetAddress.getByName is the correct method to get the inetaddress
-        player.setAddress(InetAddress.getByName(chromeCast.getAddress()));
-        player.start(chromeCast);
-        RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getTitle() + " (" + chromeCast.getModel() + ")", chromeCast.getName(), player);
-        rendererDiscoveryEvent.fire(autoDiscoveryEvent);
+      public void newChromeCastDiscovered(ChromeCast chromeCast) {
+        try {
+          final ChromeCastPlayer player = createPlayer();
+          LOGGER.info("Device discovered: " + chromeCast.getName());
+          // TODO: test if InetAddress.getByName is the correct method to get the inetaddress
+          player.start(chromeCast);
+          RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getTitle() + " (" + chromeCast.getModel() + ")", chromeCast.getName(), player);
+          rendererDiscoveryEvent.fire(autoDiscoveryEvent);
+          player.setAddress(InetAddress.getByName(chromeCast.getAddress()));
+        } catch (UnknownHostException e) {
+          LOGGER.log(Level.SEVERE, e.getMessage(), e);
+          throw new RuntimeException(e);
+        }
       }
 
       @Override

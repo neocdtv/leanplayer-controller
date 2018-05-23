@@ -73,7 +73,19 @@
     <dependency>
       <groupId>su.litvak.chromecast</groupId>
       <artifactId>api-v2</artifactId>
-      <version>0.10.4-SNAPSHOT</version>
+      <version>0.10.3-SNAPSHOT</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.jmdns</groupId>
+          <artifactId>jmdns</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jmdns</groupId>
+      <artifactId>jmdns</artifactId>
+      <version>3.5.5-SNAPSHOT</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/junit/junit -->
