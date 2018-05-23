@@ -1,6 +1,7 @@
 package io.neocdtv.player.ui.control.players;
 
 import io.neocdtv.player.ui.control.NextPlaylistTrack;
+import io.neocdtv.player.ui.control.Player;
 import io.neocdtv.player.ui.model.RendererList;
 import io.neocdtv.player.ui.model.RendererListEntry;
 import io.neocdtv.service.UrlBuilder;
@@ -22,7 +23,8 @@ public class RendererEventsHandler {
   private RendererList rendererList;
 
   public void onTrackEnded(@Observes NextPlaylistTrack event) {
-    final String url = UrlBuilder.build(event.getPath());
-    ((RendererListEntry) rendererList.getModel().getSelectedItem()).getPlayer().play(url);
+    final Player player = ((RendererListEntry) rendererList.getModel().getSelectedItem()).getPlayer();
+    final String url = UrlBuilder.build(event.getPath(), player.getAddress());
+    player.play(url);
   }
 }

@@ -14,6 +14,7 @@ import su.litvak.chromecast.api.v2.Status;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.security.GeneralSecurityException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,7 @@ public class ChromeCastPlayer implements Player {
   private MediaStatus lastMediaStatus;
   private Status lastStatus;
   private boolean isAppInitialized = false;
+  private InetAddress address;
 
   @Inject
   private Event<TrackEndedEvent> trackEndedEventEvent;
@@ -142,6 +144,15 @@ public class ChromeCastPlayer implements Player {
     } catch (Throwable e) {
       handleExceptions(e);
     }
+  }
+
+  @Override
+  public InetAddress getAddress() {
+    return address;
+  }
+
+  public void setAddress(final InetAddress address) {
+    this.address = address;
   }
 
   private void handleExceptions(Throwable e) {

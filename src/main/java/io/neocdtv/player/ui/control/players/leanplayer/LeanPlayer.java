@@ -7,6 +7,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.MediaType;
+import java.net.InetAddress;
 import java.util.logging.Logger;
 
 /**
@@ -18,8 +19,8 @@ import java.util.logging.Logger;
 public class LeanPlayer implements Player {
 
   private final static Logger LOGGER = Logger.getLogger(LeanPlayer.class.getName());
-
   private String controlLocation;
+  private InetAddress address;
 
   public void setControlLocation(String controlLocation) {
     this.controlLocation = controlLocation;
@@ -55,5 +56,14 @@ public class LeanPlayer implements Player {
   @Override
   public void volumeDown() {
 
+  }
+
+  @Override
+  public InetAddress getAddress() {
+    return address;
+  }
+
+  public void setAddress(InetAddress address) {
+    this.address = address;
   }
 }

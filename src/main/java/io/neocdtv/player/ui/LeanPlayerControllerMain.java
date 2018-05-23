@@ -1,5 +1,6 @@
 package io.neocdtv.player.ui;
 
+import io.neocdtv.player.ui.control.ActiveAddresses;
 import io.neocdtv.player.ui.discovery.RendererDiscoveryConfigurator;
 import io.neocdtv.player.ui.ui.ControllerUI;
 import io.neocdtv.player.ui.ui.LookAndFeelUI;
@@ -19,6 +20,8 @@ public class LeanPlayerControllerMain {
 
   private final static Logger LOGGER = Logger.getLogger(LeanPlayerControllerMain.class.getName());
 
+  @Inject
+  private ActiveAddresses activeAddresses;
 
   @Inject
   private ControllerUI controllerUI;
@@ -26,10 +29,9 @@ public class LeanPlayerControllerMain {
   @Inject
   private RendererDiscoveryConfigurator rendererDiscoveryConfigurator;
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     try {
       LookAndFeelUI.configure();
-      StreamingService.startIt();
       configureCdi();
     } catch (RuntimeException e) {
       LOGGER.log(Level.SEVERE, e.getMessage(), e);
@@ -37,7 +39,8 @@ public class LeanPlayerControllerMain {
     }
   }
 
-  public void main(@Observes ContainerInitialized event) {
+  public void main(@Observes ContainerInitialized event) throws Exception {
+    StreamingService.startIt(activeAddresses.getAddresses());
     rendererDiscoveryConfigurator.configurePlayerType().start();
   }
 

@@ -1,6 +1,6 @@
 package io.neocdtv.player.ui.control.players.chromecast;
 
-import io.neocdtv.commons.network.NetworkUtil;
+import io.neocdtv.player.ui.control.ActiveAddresses;
 import io.neocdtv.player.ui.discovery.RendererDiscovery;
 import io.neocdtv.player.ui.discovery.RendererDiscoveryEvent;
 import io.neocdtv.player.ui.discovery.RendererLostEvent;
@@ -12,6 +12,8 @@ import javax.enterprise.event.Event;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,7 +31,7 @@ public class ChromeCastDiscovery implements RendererDiscovery {
   private static final String MANUAL_NAME = "Chromecast Audio Device";
 
   @Inject
-  private NetworkUtil networkUtil;
+  private ActiveAddresses activeAddresses;
 
   @Inject
   private Event<RendererDiscoveryEvent> rendererDiscoveryEvent;
@@ -52,42 +54,40 @@ public class ChromeCastDiscovery implements RendererDiscovery {
     final String name = MANUAL_NAME;
     final ChromeCastPlayer player = createPlayer();
     player.start(ip);
-    RendererDiscoveryEvent manualDiscoveryEvent = new RendererDiscoveryEvent(name, UUID.randomUUID().toString() ,player);
+    RendererDiscoveryEvent manualDiscoveryEvent = new RendererDiscoveryEvent(name, UUID.randomUUID().toString(), player);
     rendererDiscoveryEvent.fire(manualDiscoveryEvent);
   }
 
   private void autoConfiguration() {
     LOGGER.info("Auto Device Configuration");
-    try {
-      ChromeCasts.registerListener(new ChromeCastsListener() {
-        @Override
-        public void newChromeCastDiscovered(ChromeCast chromeCast) {
-          final ChromeCastPlayer player = createPlayer();
-          LOGGER.info("Device discovered: " + chromeCast.getName());
-          player.start(chromeCast);
-          RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getTitle()  + " (" + chromeCast.getModel() + ")", chromeCast.getName(), player);
-          rendererDiscoveryEvent.fire(autoDiscoveryEvent);
-        }
-        @Override
-        public void chromeCastRemoved(ChromeCast chromeCast) {
-          LOGGER.info("Device lost: "+ chromeCast.getName());
-          // chromeCastRemoved is called even the device seems to work correctly; idea try open socket to device and if not possible throw event;
-          // or maybe open every 1,2 or 3s a socket to check if device works and if not throw event
-          // rendererLostEvent.fire(RendererLostEvent.create(chromeCast.getName()));
-        }
-      });
-      networkUtil.findIpv4AddressForActiveInterfaces().stream().forEach(address -> {
-        try {
-          ChromeCasts.startDiscovery(address);
-        } catch (IOException e) {
-          LOGGER.log(Level.SEVERE, e.getMessage(), e);
-        }
-      });
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-  }
+    ChromeCasts.registerListener(new ChromeCastsListener() {
+      @Override
+      public void newChromeCastDiscovered(ChromeCast chromeCast) throws UnknownHostException {
+        final ChromeCastPlayer player = createPlayer();
+        LOGGER.info("Device discovered: " + chromeCast.getName());
+        // TODO: test if InetAddress.getByName is the correct method to get the inetaddress
+        player.setAddress(InetAddress.getByName(chromeCast.getAddress()));
+        player.start(chromeCast);
+        RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getTitle() + " (" + chromeCast.getModel() + ")", chromeCast.getName(), player);
+        rendererDiscoveryEvent.fire(autoDiscoveryEvent);
+      }
 
+      @Override
+      public void chromeCastRemoved(ChromeCast chromeCast) {
+        LOGGER.info("Device lost: " + chromeCast.getName());
+        // chromeCastRemoved is called even the device seems to work correctly; idea try open socket to device and if not possible throw event;
+        // or maybe open every 1,2 or 3s a socket to check if device works and if not throw event
+        // rendererLostEvent.fire(RendererLostEvent.create(chromeCast.getName()));
+      }
+    });
+    activeAddresses.getAddresses().stream().forEach(address -> {
+      try {
+        ChromeCasts.startDiscovery(address);
+      } catch (IOException e) {
+        LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      }
+    });
+  }
 
   private ChromeCastPlayer createPlayer() {
     return CDI.current().select(ChromeCastPlayer.class).get();

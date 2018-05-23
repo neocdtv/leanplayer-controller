@@ -5,6 +5,8 @@
  */
 package io.neocdtv.player.ui.control;
 
+import java.net.InetAddress;
+
 /**
  * Player.
  *
@@ -20,4 +22,6 @@ public interface Player {
   void volumeUp();
 
   void volumeDown();
+
+  InetAddress getAddress();
 }
