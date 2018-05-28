@@ -5,16 +5,15 @@ import io.neocdtv.player.ui.discovery.RendererDiscovery;
 import io.neocdtv.player.ui.discovery.RendererDiscoveryEvent;
 import io.neocdtv.player.ui.discovery.RendererLostEvent;
 import su.litvak.chromecast.api.v2.ChromeCast;
-import su.litvak.chromecast.api.v2.ChromeCasts;
-import su.litvak.chromecast.api.v2.ChromeCastsListener;
 
 import javax.enterprise.event.Event;
 import javax.enterprise.inject.spi.CDI;
 import javax.inject.Inject;
+import javax.jmdns.JmDNS;
+import javax.jmdns.ServiceEvent;
+import javax.jmdns.ServiceListener;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.UUID;
+import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -25,10 +24,12 @@ import java.util.logging.Logger;
  * @since 24.03.18
  */
 
-public class ChromeCastDiscovery implements RendererDiscovery {
+public class ChromeCastDiscovery implements RendererDiscovery, ServiceListener {
 
   private final static Logger LOGGER = Logger.getLogger(ChromeCastDiscovery.class.getName());
-  private static final String MANUAL_NAME = "Chromecast Audio Device";
+  public static final String PROPERTY_NAME_MODEL = "md";
+  public static final String PROPERTY_NAME_NAME = "fn";
+  public static final String PROPERTY_NAME_ID = "id";
 
   @Inject
   private ActiveAddresses activeAddresses;
@@ -41,53 +42,10 @@ public class ChromeCastDiscovery implements RendererDiscovery {
 
   @Override
   public void start() {
-    String ip = System.getProperty("ip");
-    if (ip != null) {
-      manualConfiguration(ip);
-    } else {
-      autoConfiguration();
-    }
-  }
-
-  private void manualConfiguration(String ip) {
-    LOGGER.info("Manual Device Configuration: " + ip);
-    final String name = MANUAL_NAME;
-    final ChromeCastPlayer player = createPlayer();
-    player.start(ip);
-    RendererDiscoveryEvent manualDiscoveryEvent = new RendererDiscoveryEvent(name, UUID.randomUUID().toString(), player);
-    rendererDiscoveryEvent.fire(manualDiscoveryEvent);
-  }
-
-  private void autoConfiguration() {
-    LOGGER.info("Auto Device Configuration");
-    ChromeCasts.registerListener(new ChromeCastsListener() {
-      @Override
-      public void newChromeCastDiscovered(ChromeCast chromeCast) {
-        try {
-          final ChromeCastPlayer player = createPlayer();
-          LOGGER.info("Device discovered: " + chromeCast.getName());
-          // TODO: test if InetAddress.getByName is the correct method to get the inetaddress
-          player.start(chromeCast);
-          RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(chromeCast.getTitle() + " (" + chromeCast.getModel() + ")", chromeCast.getName(), player);
-          rendererDiscoveryEvent.fire(autoDiscoveryEvent);
-          player.setAddress(InetAddress.getByName(chromeCast.getAddress()));
-        } catch (UnknownHostException e) {
-          LOGGER.log(Level.SEVERE, e.getMessage(), e);
-          throw new RuntimeException(e);
-        }
-      }
-
-      @Override
-      public void chromeCastRemoved(ChromeCast chromeCast) {
-        LOGGER.info("Device lost: " + chromeCast.getName());
-        // chromeCastRemoved is called even the device seems to work correctly; idea try open socket to device and if not possible throw event;
-        // or maybe open every 1,2 or 3s a socket to check if device works and if not throw event
-        // rendererLostEvent.fire(RendererLostEvent.create(chromeCast.getName()));
-      }
-    });
     activeAddresses.getAddresses().stream().forEach(address -> {
       try {
-        ChromeCasts.startDiscovery(address);
+        JmDNS jmdns = JmDNS.create(address);
+        jmdns.addServiceListener(ChromeCast.SERVICE_TYPE, this);
       } catch (IOException e) {
         LOGGER.log(Level.SEVERE, e.getMessage(), e);
       }
@@ -96,5 +54,47 @@ public class ChromeCastDiscovery implements RendererDiscovery {
 
   private ChromeCastPlayer createPlayer() {
     return CDI.current().select(ChromeCastPlayer.class).get();
+  }
+
+  @Override
+  public void serviceAdded(ServiceEvent event) {
+    LOGGER.info(event.toString());
+  }
+
+  @Override
+  public void serviceRemoved(ServiceEvent event) {
+    LOGGER.info(event.toString());
+    LOGGER.info("Not implemented yet");
+  }
+
+  @Override
+  public void serviceResolved(ServiceEvent event) {
+    try {
+      LOGGER.info(event.toString());
+      final ChromeCastPlayer player = createPlayer();
+      final String deviceAddress = event.getInfo().getHostAddresses()[0];
+      ChromeCast chromeCast = new ChromeCast(deviceAddress);
+      // TODO: move the start to first play?
+      // Starting chromecast here start the app on all found devices
+      //player.start(chromeCast);
+      player.setLocalInterfaceAddressToStreamFrom(event.getDNS().getInetAddress());
+
+      Enumeration<String> propertyNames = event.getInfo().getPropertyNames();
+      while(propertyNames.hasMoreElements()) {
+        String key = propertyNames.nextElement();
+        LOGGER.info(key + ": " + event.getInfo().getPropertyString(key));
+      }
+
+      final String deviceName = String.format("%s (%s)",
+          event.getInfo().getPropertyString(PROPERTY_NAME_NAME),
+          event.getInfo().getPropertyString(PROPERTY_NAME_MODEL));
+      final String deviceId = event.getInfo().getPropertyString(PROPERTY_NAME_ID);
+
+      RendererDiscoveryEvent autoDiscoveryEvent = new RendererDiscoveryEvent(deviceName, deviceId, player);
+      rendererDiscoveryEvent.fire(autoDiscoveryEvent);
+
+    } catch (IOException e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+    }
   }
 }

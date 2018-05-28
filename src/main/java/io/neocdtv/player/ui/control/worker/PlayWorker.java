@@ -28,7 +28,7 @@ public class PlayWorker extends SwingWorker<Void, Void> {
   @Override
   protected Void doInBackground() {
     final String path = playlist.getCurrentPlaylistEntry().getPath();
-    String url = UrlBuilder.build(path, player.getAddress());
+    String url = UrlBuilder.build(path, player.getLocalInterfaceAddressToStreamFrom());
     LOGGER.info("Start playing " + url);
     player.play(url);
     return null;

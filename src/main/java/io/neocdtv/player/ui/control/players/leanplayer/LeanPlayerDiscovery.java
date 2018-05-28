@@ -64,7 +64,8 @@ public class LeanPlayerDiscovery implements RendererDiscovery, ServiceListener {
   @Override
   public void serviceRemoved(ServiceEvent event) {
     LOGGER.info(event.toString());
-    rendererLostEvent.fire(RendererLostEvent.create(event.getInfo().getPropertyString(PROPERTY_UUID)));
+    //rendererLostEvent.fire(RendererLostEvent.create(event.getInfo().getPropertyString(PROPERTY_UUID)));
+    LOGGER.info("Not implemented yet");
   }
 
   @Override
@@ -73,14 +74,13 @@ public class LeanPlayerDiscovery implements RendererDiscovery, ServiceListener {
       LOGGER.info(event.toString());
       final LeanPlayer leanPlayer = new LeanPlayer();
       leanPlayer.setControlLocation(event.getInfo().getPropertyString(PROPERTY_CONTROL_LOCATION));
-      leanPlayer.setAddress(event.getDNS().getInetAddress());
+      leanPlayer.setLocalInterfaceAddressToStreamFrom(event.getDNS().getInetAddress());
+
       final LeanPlayerEventsHandler leanPlayerEventsHandler = new LeanPlayerEventsHandler();
       leanPlayerEventsHandler.setEventsLocation(event.getInfo().getPropertyString(PROPERTY_EVENTS_LOCATION));
       leanPlayerEventsHandler.setTrackEndedEventEvent(trackEndedEventEvent);
       leanPlayerEventsHandler.setupEventsConnection();
-      // TODO: add somewhere a check that if the player is found on loopback and other interface,
-      // that the other interface should be preferred and that if multi-homed, that only one
-      // on version the player is shown in the drop down
+
       rendererDiscoveryEvent.fire(
           new RendererDiscoveryEvent(
               event.getInfo().getPropertyString(PROPERTY_NAME),

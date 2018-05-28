@@ -59,11 +59,11 @@ public class LeanPlayer implements Player {
   }
 
   @Override
-  public InetAddress getAddress() {
+  public InetAddress getLocalInterfaceAddressToStreamFrom() {
     return address;
   }
 
-  public void setAddress(InetAddress address) {
+  public void setLocalInterfaceAddressToStreamFrom(final InetAddress address) {
     this.address = address;
   }
 }

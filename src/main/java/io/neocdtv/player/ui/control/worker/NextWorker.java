@@ -29,7 +29,7 @@ public class NextWorker extends SwingWorker<Void, Void> {
   @Override
   protected Void doInBackground() {
     final PlaylistEntry nextPlaylistEntry = playlist.getNextPlaylistEntry();
-    String url = UrlBuilder.build(nextPlaylistEntry.getPath(), player.getAddress());
+    String url = UrlBuilder.build(nextPlaylistEntry.getPath(), player.getLocalInterfaceAddressToStreamFrom());
     player.play(url);
     return null;
   }

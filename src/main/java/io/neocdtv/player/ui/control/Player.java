@@ -23,5 +23,5 @@ public interface Player {
 
   void volumeDown();
 
-  InetAddress getAddress();
+  InetAddress getLocalInterfaceAddressToStreamFrom();
 }

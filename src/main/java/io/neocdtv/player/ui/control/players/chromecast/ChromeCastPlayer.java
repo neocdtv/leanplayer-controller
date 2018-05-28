@@ -68,7 +68,6 @@ public class ChromeCastPlayer implements Player {
     });
   }
 
-
   // TODO: still work in progress on trying to improve stability
   private void ensureDefaultMediaRendererIsRunning() throws IOException, GeneralSecurityException {
     LOGGER.info("isAppInitialized: " + isAppInitialized);
@@ -147,11 +146,11 @@ public class ChromeCastPlayer implements Player {
   }
 
   @Override
-  public InetAddress getAddress() {
+  public InetAddress getLocalInterfaceAddressToStreamFrom() {
     return address;
   }
 
-  public void setAddress(final InetAddress address) {
+  public void setLocalInterfaceAddressToStreamFrom(final InetAddress address) {
     this.address = address;
   }
 

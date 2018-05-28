@@ -24,7 +24,7 @@ public class RendererEventsHandler {
 
   public void onTrackEnded(@Observes NextPlaylistTrack event) {
     final Player player = ((RendererListEntry) rendererList.getModel().getSelectedItem()).getPlayer();
-    final String url = UrlBuilder.build(event.getPath(), player.getAddress());
+    final String url = UrlBuilder.build(event.getPath(), player.getLocalInterfaceAddressToStreamFrom());
     player.play(url);
   }
 }
