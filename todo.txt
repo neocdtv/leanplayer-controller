@@ -1,8 +1,7 @@
 Prio:
-- fix localhost interface support for streaming service - use Network util
-
-Prio:
+- when to player.start(chromeCast) in ChromeCastDiscovery
 - improve chromecast stability - try pooling on media_status and status, since events are not working always correct
+- add stable device removal
 
 product backlog
 - check todos
@@ -27,5 +26,3 @@ product backlog
 - New Protocol: add support for dlna
     use cling to implement dlna-renderer for mplayer and omxplayer
     use cling to implement dlna-controller
-
-- add stable device removal
