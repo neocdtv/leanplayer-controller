@@ -79,12 +79,6 @@ public class ChromeCastDiscovery implements RendererDiscovery, ServiceListener {
       //player.start(chromeCast);
       player.setLocalInterfaceAddressToStreamFrom(event.getDNS().getInetAddress());
 
-      Enumeration<String> propertyNames = event.getInfo().getPropertyNames();
-      while(propertyNames.hasMoreElements()) {
-        String key = propertyNames.nextElement();
-        LOGGER.info(key + ": " + event.getInfo().getPropertyString(key));
-      }
-
       final String deviceName = String.format("%s (%s)",
           event.getInfo().getPropertyString(PROPERTY_NAME_NAME),
           event.getInfo().getPropertyString(PROPERTY_NAME_MODEL));
