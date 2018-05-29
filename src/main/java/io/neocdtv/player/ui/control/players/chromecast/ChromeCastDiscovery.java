@@ -75,7 +75,7 @@ public class ChromeCastDiscovery implements RendererDiscovery, ServiceListener {
       ChromeCast chromeCast = new ChromeCast(deviceAddress);
       // TODO: move the start to first play?
       // Starting chromecast here start the app on all found devices
-      //player.start(chromeCast);
+      player.start(chromeCast);
       player.setLocalInterfaceAddressToStreamFrom(event.getDNS().getInetAddress());
 
       final String deviceName = String.format("%s (%s)",
