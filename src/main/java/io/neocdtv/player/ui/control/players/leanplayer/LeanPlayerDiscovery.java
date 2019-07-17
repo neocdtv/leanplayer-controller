@@ -1,5 +1,6 @@
 package io.neocdtv.player.ui.control.players.leanplayer;
 
+import io.neocdtv.commons.network.NetworkUtil;
 import io.neocdtv.player.ui.control.ActiveAddresses;
 import io.neocdtv.player.ui.control.TrackEndedEvent;
 import io.neocdtv.player.ui.discovery.RendererDiscovery;
@@ -12,6 +13,7 @@ import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -43,9 +45,29 @@ public class LeanPlayerDiscovery implements RendererDiscovery, ServiceListener {
   @Inject
   private Event<TrackEndedEvent> trackEndedEventEvent;
 
+  @Inject
+  private NetworkUtil networkUtil;
 
   @Override
   public void start() {
+    String interfaceName = System.getProperty("if");
+    try {
+      if (interfaceName == null) {
+        registerOnAllActiveAddresses();
+      } else {
+        Inet4Address address = networkUtil.getIpv4AddressForInterface(interfaceName);
+        JmDNS jmdns = JmDNS.create(address);
+        jmdns.addServiceListener(SERVICE_TYPE, this);
+        LOGGER.log(Level.INFO,
+            String.format("starting discovery service on address %s",
+                address.getHostAddress()));
+      }
+    } catch (IOException e) {
+      LOGGER.log(Level.SEVERE, e.getMessage(), e);
+    }
+  }
+
+  private void registerOnAllActiveAddresses() {
     activeAddresses.getAddresses().stream().forEach(address -> {
       try {
         JmDNS jmdns = JmDNS.create(address);
