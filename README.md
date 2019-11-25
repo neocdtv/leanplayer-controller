@@ -5,8 +5,7 @@ UI Client (Controller) for leanplayer-renderer (in progress) and Chromecast
 1. streaming service
 ```sh
 git clone git@github.com:neocdtv/common.git
-
 cd common/streamingservice
-```
 mvn clean install
+```
 2. 
