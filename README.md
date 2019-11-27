@@ -7,3 +7,8 @@ git clone git@github.com:neocdtv/common.git
 cd common/streamingservice
 mvn clean install
 ```
+```sh
+git clone git@github.com:neocdtv/commons-network.git
+cd commons-network
+mvn clean install
+```
