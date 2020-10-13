@@ -22,7 +22,7 @@
     <jersey-client.version>2.16</jersey-client.version>
     <tyrus-client.version>1.12</tyrus-client.version>
     <api-v2.version>0.10.3</api-v2.version>
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <mockito-core.version>2.18.3</mockito-core.version>
   </properties>
 
